@@ -1,0 +1,52 @@
+apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
+apply plugin: 'com.neenbedankt.android-apt' // 注释处理
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "24.0.1"
+    defaultConfig {
+        applicationId "com.xdlteam.pike"
+        minSdkVersion 17
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.0.0'
+    testCompile 'junit:junit:4.12'
+    //注解插件
+    compile 'com.jakewharton:butterknife:8.4.0'
+    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+    //圆形的ImageView
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+    //Bmob数据服务
+    compile 'cn.bmob.android:bmob-sdk:3.5.0'
+    //Bmob单独为短信服务提供的包
+    compile 'cn.bmob.android:bmob-sms:1.0.1'
+    //兼容安卓6.0
+    compile 'cn.bmob.android:http-legacy:1.0'
+    //图片加载框架
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    //RxAndroid
+/*    compile 'io.reactivex:rxandroid:1.1.0'
+    //RxJava
+    compile 'io.reactivex:rxjava:1.1.0'*/
+    //Dagger2
+    compile 'com.google.dagger:dagger:2.0.2'
+    compile 'com.google.dagger:dagger-compiler:2.0.2'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+}
