@@ -2,17 +2,19 @@ package com.xdlteam.pike.camera;
 
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.xdlteam.pike.R;
 import com.xdlteam.pike.contract.IFragCameraContract;
+import com.xdlteam.pike.widget.RecoderProgress;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -34,8 +36,8 @@ public class CameraFrament extends BaseFragment implements IFragCameraContract.I
     ImageView mActCameraIvChange;
     @BindView(R.id.act_camera_iv_music)
     ImageView mActCameraIvMusic;
-    @BindView(R.id.act_camera_pb)
-    ProgressBar mActCameraPb;
+    @BindView(R.id.frag_camera_recodrProgress)
+    RecoderProgress mActCameraPb;
     @BindView(R.id.act_camera_iv_del)
     ImageView mActCameraIvDel;
     @BindView(R.id.act_camera_iv_start)
@@ -53,6 +55,32 @@ public class CameraFrament extends BaseFragment implements IFragCameraContract.I
      * 默认为 false 未开启状态 ,true 为开启状态
      */
     private boolean lightFlag = false;
+    /**
+     * 用于标记进度条的状态
+     * 默认为false 为未开启状态, true 为开始前状态
+     */
+    private boolean isStart = false;
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 0://时间结束之后,结束录制
+                    if (flag){//如果未点击按钮,正在录制
+                        //结束录制
+                        mPresenter.stop();
+                        //将按钮状态设置成默认为点击状态
+                        mActCameraIvStart.setImageResource(R.drawable.act_camera_start);
+                        mActCameraPb.stopAnimation();
+                        flag = !flag;
+                        isStart = false;
+                        //显示按钮
+                        showBtns();
+                    }
+                    break;
+            }
+        }
+    };
     @Override
     protected void lazyLoad() {
 
@@ -69,6 +97,8 @@ public class CameraFrament extends BaseFragment implements IFragCameraContract.I
     protected void initData(@Nullable Bundle savedInstanceState) {
         mPresenter = new FragCameraPresenterImpl(this);
         mPresenter.initData();
+        //设置按钮为不可显示状态
+        hideBtns();
     }
 
     @Override
@@ -103,6 +133,11 @@ public class CameraFrament extends BaseFragment implements IFragCameraContract.I
         return mActCameraSv;
     }
 
+    @Override
+    public RecoderProgress getmActCameraPb() {
+        return mActCameraPb;
+    }
+
     @OnClick({R.id.act_camera_iv_exit,R.id.act_camera_iv_light,R.id.act_camera_iv_change, R.id.act_camera_iv_music, R.id.act_camera_iv_del, R.id.act_camera_iv_start, R.id.act_camera_iv_ok})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -131,14 +166,58 @@ public class CameraFrament extends BaseFragment implements IFragCameraContract.I
                 if (!flag) {//如果是第一次点击
                     mPresenter.start();
                     mActCameraIvStart.setImageResource(R.drawable.act_camera_pause);
-                } else {
+                    //隐藏按钮
+                    hideBtns();
+                    if(!isStart){//判断进度条是否为启动状态
+                        mActCameraPb.startAnimation();//启动动画
+                        /**
+                         * 开启一个倒计时,用于动画结束之后，重置按钮
+                         */
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Thread.sleep(10000);//使线程休眠10s
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                Message message = Message.obtain();
+                                message.what = 0;
+                                mHandler.sendMessage(message);
+                            }
+                        }).start();
+                    }else{
+                        mActCameraPb.stopAnimation();
+                    }
+                    isStart = !isStart;
+                } else {//第二次点击停止录制
                     mPresenter.stop();
                     mActCameraIvStart.setImageResource(R.drawable.act_camera_start);
+                    mActCameraPb.stopAnimation();
+                    isStart = false;
+                    //显示按钮
+                    showBtns();
                 }
                 flag = !flag;
                 break;
             case R.id.act_camera_iv_ok:
                 break;
         }
+    }
+
+    /**
+     * 显示按钮的方法
+     */
+    void showBtns(){
+        mActCameraIvDel.setVisibility(View.VISIBLE);
+        mActCameraIvOk.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 隐藏按钮
+     */
+    void hideBtns(){
+        mActCameraIvDel.setVisibility(View.INVISIBLE);
+        mActCameraIvOk.setVisibility(View.INVISIBLE);
     }
 }

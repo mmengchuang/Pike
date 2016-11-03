@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
     <!--相机部分开始-->
     <RelativeLayout
@@ -55,15 +56,15 @@
     </RelativeLayout>
     <!--相机部分结束-->
     <!--进度条-->
-    <ProgressBar
-        android:id="@+id/act_camera_pb"
+    <com.xdlteam.pike.widget.RecoderProgress
+        android:id="@+id/frag_camera_recodrProgress"
+        app:max_recoder_time="10000"
+        app:min_recoder_time="2000"
+        app:af_progress_color="@color/colorPrimaryDark"
+        app:bf_progress_color="@color/colorAccent"
+        android:layout_centerInParent="true"
         android:layout_width="match_parent"
-        android:layout_height="5dp"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:max="100"
-        android:progress="20"
-        android:secondaryProgress="100"
-        />
+        android:layout_height="2dp" />
     <!--下部分开始-->
     <LinearLayout
         android:layout_width="match_parent"

@@ -7,9 +7,11 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import com.xdlteam.pike.contract.IFragCameraContract;
 import com.xdlteam.pike.util.LogUtils;
+import com.xdlteam.pike.widget.RecoderProgress;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +40,8 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
     private SurfaceHolder holder;
     // 摄像头的状态,0表示后置，1表示前置
     private int cameraPosition = 1;
+    //进度条
+    private RecoderProgress mProgressBar;
 
     public FragCameraPresenterImpl(IFragCameraContract.IFragCameraView mFragView) {
         this.mFragView = mFragView;
@@ -47,7 +51,7 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
     public void initData() {
         //获取控件
         mSurfaceView = mFragView.getmActCameraSv();
-
+        mProgressBar = mFragView.getmActCameraPb();
         //重写AutoFocusCallback接口
         mAutoFocusCallback = new Camera.AutoFocusCallback() {
             @Override
@@ -63,6 +67,19 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
 
         holder.addCallback(this); // holder加入回调接口
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        initEvent();
+    }
+
+    /**
+     * 初始化监听
+     */
+    private void initEvent() {
+        mProgressBar.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int i) {
+                LogUtils.i("myTag","我在进行进度条的测试 "+i);
+            }
+        });
     }
 
     /**
@@ -245,7 +262,6 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
         }
     }
 
-    //需要完成的添加录制的进度条
     @Override
     public void openLight() {
         Camera.Parameters mParameters;mParameters = myCamera.getParameters();

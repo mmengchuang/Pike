@@ -2,6 +2,8 @@ package com.xdlteam.pike.contract;
 
 import android.view.SurfaceView;
 
+import com.xdlteam.pike.widget.RecoderProgress;
+
 /**
  * 契约类、使view 和 Presenter 之前的方法清晰
  * Created by 11655 on 2016/10/18.
@@ -38,6 +40,7 @@ public class IFragCameraContract {
 
         SurfaceView getmActCameraSv();
 
+        RecoderProgress getmActCameraPb();
     }
 
     public interface IFragCameraPresenter {
