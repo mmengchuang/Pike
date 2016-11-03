@@ -5,4 +5,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorText">#bfbfbf</color>
     <color name="colorKuang">#e6e6e6</color>
+    <color name="colorTransparency">#fff</color>
+    <color name="colorCameraLine">#ea9518</color>
 </resources>

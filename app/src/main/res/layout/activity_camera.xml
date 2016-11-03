@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/act_camera_vp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"></android.support.v4.view.ViewPager>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/act_camera_btn_left"
+            android:layout_width="match_parent"
+            android:layout_height="40dip"
+            android:layout_weight="1"
+            android:background="@color/colorTransparency"
+            android:text="相册" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="30dip"
+            android:background="@color/colorCameraLine" />
+
+        <Button
+            android:id="@+id/act_camera_btn_right"
+            android:layout_width="match_parent"
+            android:layout_height="40dip"
+            android:layout_weight="1"
+            android:background="@color/colorTransparency"
+            android:text="视频" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="160dip"
+        android:layout_height="5dip"
+        android:background="@color/colorCameraLine" />
+</LinearLayout>
