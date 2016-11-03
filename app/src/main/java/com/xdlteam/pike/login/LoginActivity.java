@@ -14,7 +14,6 @@ import com.xdlteam.pike.base.BaseActivity;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.register.RegisterActivity;
 
-import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.LogInListener;
 
@@ -30,7 +29,6 @@ public class LoginActivity extends BaseActivity {
         initView();
         initDatas();
         initOpers();
-
     }
     private void initView() {
         etUserName= (EditText) findViewById(R.id.act_login_username);
@@ -64,23 +62,23 @@ public class LoginActivity extends BaseActivity {
             return;
         }
         //进行登录
-        BmobUser.loginByAccount(userName, pwd, new LogInListener<User>() {
+        User.loginByAccount(userName, pwd, new LogInListener<User>() {
             @Override
             public void done(User user, BmobException e) {
                 if(e!=null){
                     Toast.makeText(LoginActivity.this,"登录失败",Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                if(user!=null){
-                    SharedPreferences sp=getSharedPreferences("userinfo.txt",MODE_PRIVATE);
-                    SharedPreferences.Editor edit = sp.edit();
-                    edit.putString("userName",userName);
-                    edit.putString("pwd",pwd);
-                    edit.commit();
-                    Toast.makeText(LoginActivity.this,"登录成功",Toast.LENGTH_SHORT).show();
-
-                }
+                Toast.makeText(LoginActivity.this,"登录成功",Toast.LENGTH_SHORT).show();
+//                if(user!=null){
+//                    SharedPreferences sp=getSharedPreferences("userinfo.txt",MODE_PRIVATE);
+//                    SharedPreferences.Editor edit = sp.edit();
+////                    edit.putString("userName",userName);
+////                    edit.putString("pwd",pwd);
+////                    edit.commit();
+//                    Toast.makeText(LoginActivity.this,"登录成功",Toast.LENGTH_SHORT).show();
+//
+//                }
             }
         });
 

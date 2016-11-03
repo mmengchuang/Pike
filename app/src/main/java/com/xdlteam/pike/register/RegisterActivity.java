@@ -45,6 +45,9 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadFileListener;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * 注册页面，可获取验证码进行注册
+ */
 public class RegisterActivity extends BaseActivity {
 
 
@@ -86,9 +89,14 @@ public class RegisterActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
+        //初始化当前注册用户
         user=new User();
        initViewOpers();
     }
+
+    /**
+     * 初始化点击事件
+     */
     protected void initViewOpers() {
         /**
          * 选择头像
@@ -97,9 +105,11 @@ public class RegisterActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 logInfo("点击头像");
+                //创建警告对话框
                 AlertDialog mAlertDialog;
                 AlertDialog.Builder builder=new AlertDialog.Builder(RegisterActivity.this);
-                builder.setMessage("选择更换方式")
+                //设置对话框内容
+                builder.setTitle("选择更换方式")
                         .setCancelable(false)
                         .setNegativeButton("从相册中选取", new DialogInterface.OnClickListener() {
                             @Override
@@ -176,10 +186,10 @@ public class RegisterActivity extends BaseActivity {
         intent.setDataAndType(uri, "image/*");
         intent.putExtra("crop", "true");
         // aspectX aspectY 是宽高的比例
-        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectX", 0.8);
         intent.putExtra("aspectY", 1);
         // outputX outputY 是裁剪图片宽高
-        intent.putExtra("outputX", 100);
+        intent.putExtra("outputX", 80);
         intent.putExtra("outputY", 100);
         intent.putExtra("return-data", true);
         startActivityForResult(intent, 3);
@@ -192,9 +202,8 @@ public class RegisterActivity extends BaseActivity {
         FileOutputStream b = null;
         File filePath = new File(path);
         filePath.mkdirs();// 创建文件夹
-        String fileName = path + "head.jpg";// 图片名字
+        String fileName = path + "Head.jpg";// 图片名字
         file=new File(fileName);
-        file.mkdirs();
         try {
             b = new FileOutputStream(fileName);
             mBitmap.compress(Bitmap.CompressFormat.JPEG, 50, b);// 把数据写入文件
@@ -317,7 +326,7 @@ public class RegisterActivity extends BaseActivity {
                                         if (e == null) {
                                             toShort("注册成功:" + s.toString());
                                             MyApplcation.sUser=s;
-//                                            RegisterActivity.this.finish();
+                                            RegisterActivity.this.finish();
                                         } else {
                                             logInfo(e+"");
                                             toShort("注册失败" + e);
