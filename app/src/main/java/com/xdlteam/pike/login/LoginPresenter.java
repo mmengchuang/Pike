@@ -8,14 +8,15 @@ import com.xdlteam.pike.base.BasePresenter;
 
 public class LoginPresenter implements BasePresenter {
     private LoginActivity mLoginActivity;
-
     public LoginPresenter(LoginActivity loginActivity) {
         mLoginActivity=loginActivity;
     }
-
-
     @Override
     public void unBind() {
         mLoginActivity=null;
+    }
+
+    public void getUser() {
+
     }
 }
