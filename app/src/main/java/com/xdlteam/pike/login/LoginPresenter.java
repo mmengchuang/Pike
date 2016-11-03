@@ -12,9 +12,7 @@ public class LoginPresenter implements BasePresenter {
         mLoginActivity=loginActivity;
     }
     @Override
-    public void unBind() {
-        mLoginActivity=null;
-    }
+    public void unBind(){}
 
     public void getUser() {
 

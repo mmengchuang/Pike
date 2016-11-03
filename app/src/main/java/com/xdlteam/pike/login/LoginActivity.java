@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.xdlteam.pike.R;
 import com.xdlteam.pike.base.BaseActivity;
 import com.xdlteam.pike.bean.User;
+import com.xdlteam.pike.home.HomeActivity;
 import com.xdlteam.pike.register.RegisterActivity;
 
 import cn.bmob.v3.exception.BmobException;
@@ -69,6 +70,8 @@ public class LoginActivity extends BaseActivity {
                     Toast.makeText(LoginActivity.this,"登录失败",Toast.LENGTH_SHORT).show();
                     return;
                 }
+                Intent intent = HomeActivity.newIntent(LoginActivity.this);
+                startActivity(intent);
                 Toast.makeText(LoginActivity.this,"登录成功",Toast.LENGTH_SHORT).show();
 //                if(user!=null){
 //                    SharedPreferences sp=getSharedPreferences("userinfo.txt",MODE_PRIVATE);
