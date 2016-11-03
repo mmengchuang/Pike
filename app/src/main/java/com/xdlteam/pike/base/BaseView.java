@@ -5,4 +5,5 @@ package com.xdlteam.pike.base;
  */
 
 public interface BaseView {
+
 }
