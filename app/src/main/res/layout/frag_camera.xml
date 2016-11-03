@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!--相机部分开始-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <SurfaceView
+            android:id="@+id/act_camera_sv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/act_camera_iv_exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/act_camera_exit"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="50dp"/>
+        <!--相机底部小按钮区域-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/act_camera_iv_light"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/act_camera_light_off" />
+
+            <ImageView
+                android:id="@+id/act_camera_iv_change"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/act_camera_change" />
+
+            <ImageView
+                android:id="@+id/act_camera_iv_music"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/act_camera_music" />
+        </LinearLayout>
+    </RelativeLayout>
+    <!--相机部分结束-->
+    <!--进度条-->
+    <ProgressBar
+        android:id="@+id/act_camera_pb"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:max="100"
+        android:progress="20"
+        android:secondaryProgress="100"
+        />
+    <!--下部分开始-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <ImageView
+            android:id="@+id/act_camera_iv_del"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:src="@drawable/act_camera_del" />
+
+        <ImageView
+            android:id="@+id/act_camera_iv_start"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/act_camera_start" />
+
+        <ImageView
+            android:id="@+id/act_camera_iv_ok"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:src="@drawable/act_camera_ok" />
+    </LinearLayout>
+    <!--下部分结束-->
+</LinearLayout>

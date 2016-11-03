@@ -119,6 +119,6 @@
             android:text="新用户   点击注册"
             android:textColor="#3F51B5"
             />
-<!---->
+
     </LinearLayout>
 </LinearLayout>
