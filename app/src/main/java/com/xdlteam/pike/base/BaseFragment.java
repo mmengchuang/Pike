@@ -1,22 +1,6 @@
 package com.xdlteam.pike.base;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.provider.Settings;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.xdlteam.pike.application.MyApplcation;
-import com.xdlteam.pike.bean.User;
-
-import butterknife.ButterKnife;
-import cn.bmob.v3.BmobUser;
 
 /**
  * 所有Fragment的基类,该类对Fragment进行优化<br/>
@@ -26,11 +10,11 @@ import cn.bmob.v3.BmobUser;
  */
 public abstract class BaseFragment extends Fragment {
 
-    //定义一个用于重复view 的回收池
+    /*//定义一个用于重复view 的回收池
     private View contentView = null;
-    /**
+    *//**
      * Fragment当前状态是否可见
-     */
+     *//*
     protected boolean isVisible;
     private AlertDialog.Builder builder;
     private AlertDialog alertDialog;
@@ -70,26 +54,26 @@ public abstract class BaseFragment extends Fragment {
     }
 
 
-    /**
+    *//**
      * 可见
-     */
+     *//*
     protected void onVisible() {
         lazyLoad();
     }
 
 
-    /**
+    *//**
      * 不可见
-     */
+     *//*
     protected void onInvisible() {
 
     }
 
 
-    /**
+    *//**
      * 延迟加载
      * 子类必须重写此方法
-     */
+     *//*
     protected abstract void lazyLoad();
 
     @Override
@@ -99,11 +83,11 @@ public abstract class BaseFragment extends Fragment {
         super.onDestroyView();
     }
 
-    /**
+    *//**
      * 判断用户是否登陆过
      *
      * @return true 为登陆成功 false 为没有登陆过
-     */
+     *//*
     protected boolean isLogin() {
         if (BmobUser.getCurrentUser() == null) {
             return false;
@@ -113,9 +97,9 @@ public abstract class BaseFragment extends Fragment {
     }
 
 
-    /**
+    *//**
      * 功能 ：显示一个警告对话框
-     */
+     *//*
     protected void showAlertDialog(String title, String text) {
         if (builder == null) {
             //创建一个构建者对象
@@ -139,9 +123,9 @@ public abstract class BaseFragment extends Fragment {
         alertDialog = builder.show();
     }
 
-    /**
+    *//**
      * 功能:取消警告对话框
-     */
+     *//*
     protected void dismissAlertDialog() {
         if (alertDialog != null) {
             //取消警告对话框
@@ -149,9 +133,9 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    /**
+    *//**
      * 功能 ：显示一个进度条对话框
-     */
+     *//*
     protected void showProcessDialog(String title, String msg, boolean falg) {
         if (dialog == null) {
             dialog = new ProgressDialog(getContext());
@@ -162,28 +146,28 @@ public abstract class BaseFragment extends Fragment {
         dialog.show();
     }
 
-    /**
+    *//**
      * 功能 ：取消一个进度条对话框
-     */
+     *//*
     protected void dismissProcessDialog() {
         if (dialog != null) {
             dialog.dismiss();
         }
     }
 
-    /**
+    *//**
      * 初始化Fragment的布局,当要创建视图时调用
      *
      * @param inflater  布局填充器
      * @param container ViewGroup
      * @param flag         标记
      * @return view 返回视图
-     */
+     *//*
     public abstract View initLayout(LayoutInflater inflater, ViewGroup container, boolean flag);
 
-    /**
+    *//**
      * 初始化数据,当ViewCreate被创建是调用此方法
-     */
-    protected abstract void initData(@Nullable Bundle savedInstanceState);
+     *//*
+    protected abstract void initData(@Nullable Bundle savedInstanceState);*/
 
 }
