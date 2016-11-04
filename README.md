@@ -18,4 +18,5 @@
 #### 技术难点与解决方案
 - 自定义相机出现 at android.media.MediaRecorder.start(Native Method)以及预览被旋转90度
   解决方案：
+- 视频录制结果旋转了90度
 ***

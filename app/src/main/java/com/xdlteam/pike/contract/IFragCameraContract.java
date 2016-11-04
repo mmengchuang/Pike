@@ -20,26 +20,15 @@ public class IFragCameraContract {
         void showMsg(String msg);
 
         /**
-         * 展示一个进度条对话框
-         *
-         * @param title 标题
-         * @param msg   显示的内容
-         * @param flag  是否可以取消
+         * 获取显示视频的控件对象
+         * @return surfaceView 控件对象
          */
-        void showLoadingDialog(String title, String msg, boolean flag);
-
-        /**
-         * 取消进度条
-         */
-        void canelLoadingDialog();
-
-        /**
-         * activity的跳转
-         */
-        void jumpActivity();
-
         SurfaceView getmActCameraSv();
 
+        /**
+         * 获取显示进度条控件对象
+         * @return 进度条控件对象
+         */
         RecoderProgress getmActCameraPb();
     }
 
@@ -79,5 +68,11 @@ public class IFragCameraContract {
          * 关闭闪关灯
          */
         void closeLight();
+
+        /**
+         * 从本地删除刚刚录制的视频文件
+         * @param fileUrl 文件路径
+         */
+        void delFile(String fileUrl);
     }
 }

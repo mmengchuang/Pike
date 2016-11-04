@@ -7,7 +7,6 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 import com.xdlteam.pike.contract.IFragCameraContract;
 import com.xdlteam.pike.util.LogUtils;
@@ -42,6 +41,8 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
     private int cameraPosition = 1;
     //进度条
     private RecoderProgress mProgressBar;
+    //保存录制视频的路径
+    private static String mFilePath ="";
 
     public FragCameraPresenterImpl(IFragCameraContract.IFragCameraView mFragView) {
         this.mFragView = mFragView;
@@ -67,19 +68,6 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
 
         holder.addCallback(this); // holder加入回调接口
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        initEvent();
-    }
-
-    /**
-     * 初始化监听
-     */
-    private void initEvent() {
-        mProgressBar.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int i) {
-                LogUtils.i("myTag","我在进行进度条的测试 "+i);
-            }
-        });
     }
 
     /**
@@ -144,6 +132,13 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
         return null;
     }
 
+    /**
+     * 获取录制视频的路径
+     * @return
+     */
+    public String getmFilePath() {
+        return mFilePath;
+    }
     @Override
     public void start() {//开始录制
         if (!mStartedFlg) {
@@ -169,7 +164,11 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
                     if (!dir.exists()) {
                         dir.mkdir();
                     }
+
                     path = dir + "/" + getDate() + ".mp4";
+                    /*2016.11.4 修改*/
+                    //将小视频的路径地址保存到全局,方便在上传视频时获取视频路径
+                    mFilePath = path;
                     mRecorder.setOutputFile(path);
                     Log.d(TAG, "bf mRecorder.prepare()");
                     mRecorder.prepare();
@@ -278,6 +277,17 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
     }
 
     @Override
+    public void delFile(String fileUrl) {
+        File videoFile = new File(fileUrl);
+        if (videoFile.exists()){//文件存在,则删除文件
+            videoFile.delete();
+            mFragView.showMsg("视频文件删除成功!");
+        }else {
+            mFragView.showMsg("已经没有文件了,不要点击了哦!");
+        }
+    }
+
+    @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         mSurfaceHolder = holder;
         initCamera(0);
@@ -299,5 +309,4 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
             mRecorder = null;
         }
     }
-
 }

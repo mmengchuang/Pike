@@ -15,7 +15,8 @@ public class Video extends BmobObject {
     private String userId;//视频是谁发布的
     private int loveCount;//点赞的数量,红心的数量
     private BmobFile video_image;//视频的缩略图
-    private BmobGeoPoint video_point;//视频发布地点
+    private BmobGeoPoint video_point;//视频发布地理位置
+    private String video_locaton;//视频发布的地点描述
     private BmobFile video_content;//视频内容
     private String video_describe;//视频描述
 
@@ -65,5 +66,13 @@ public class Video extends BmobObject {
 
     public void setLoveCount(int loveCount) {
         this.loveCount = loveCount;
+    }
+
+    public String getVideo_locaton() {
+        return video_locaton;
+    }
+
+    public void setVideo_locaton(String video_locaton) {
+        this.video_locaton = video_locaton;
     }
 }
