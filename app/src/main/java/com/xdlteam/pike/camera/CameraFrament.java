@@ -114,7 +114,6 @@ public class CameraFrament extends BaseFragment implements IFragCameraContract.I
         //释放相机资源
         mPresenter.releaseCamera();
     }
-
     @Override
     public SurfaceView getmActCameraSv() {
         return mActCameraSv;
@@ -193,6 +192,7 @@ public class CameraFrament extends BaseFragment implements IFragCameraContract.I
                 Intent intent = new Intent(getContext(), ReleaseActivity.class);//跳转到发布视频页面
                 intent.putExtra("ViedeoLocalURL",mPresenter.getmFilePath());//将小视频路径传递到下一个页面
                 startActivity(intent);
+                getActivity().finish();
                 break;
         }
     }

@@ -42,7 +42,7 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
     //进度条
     private RecoderProgress mProgressBar;
     //保存录制视频的路径
-    private static String mFilePath ="";
+    private static String mFilePath = "";
 
     public FragCameraPresenterImpl(IFragCameraContract.IFragCameraView mFragView) {
         this.mFragView = mFragView;
@@ -134,11 +134,13 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
 
     /**
      * 获取录制视频的路径
+     *
      * @return
      */
     public String getmFilePath() {
         return mFilePath;
     }
+
     @Override
     public void start() {//开始录制
         if (!mStartedFlg) {
@@ -153,6 +155,8 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
                 // 这两项需要放在setOutputFormat之前
                 mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                 mRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+                //解决录制视频之后旋转90度问题
+                mRecorder.setOrientationHint(90);
                 mRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
                 mRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());
 
@@ -203,7 +207,7 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
         int cameraCount = 0;
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
         cameraCount = Camera.getNumberOfCameras();// 得到摄像头的个数
-        LogUtils.i("myTag","我获取到的摄像头的个数"+cameraCount);
+        LogUtils.i("myTag", "我获取到的摄像头的个数" + cameraCount);
         for (int i = 0; i < cameraCount; i++) {
             Camera.getCameraInfo(i, cameraInfo);// 得到每一个摄像头的信息
             if (cameraPosition == 1) {
@@ -248,6 +252,7 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
             }
         }
     }
+
     /**
      * 释放mCamera
      */
@@ -259,11 +264,16 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
             myCamera.release();
             myCamera = null;
         }
+        if (mRecorder != null) {
+            mRecorder.release();
+            mRecorder = null;
+        }
     }
 
     @Override
     public void openLight() {
-        Camera.Parameters mParameters;mParameters = myCamera.getParameters();
+        Camera.Parameters mParameters;
+        mParameters = myCamera.getParameters();
         mParameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
         myCamera.setParameters(mParameters);
     }
@@ -279,10 +289,10 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
     @Override
     public void delFile(String fileUrl) {
         File videoFile = new File(fileUrl);
-        if (videoFile.exists()){//文件存在,则删除文件
+        if (videoFile.exists()) {//文件存在,则删除文件
             videoFile.delete();
             mFragView.showMsg("视频文件删除成功!");
-        }else {
+        } else {
             mFragView.showMsg("已经没有文件了,不要点击了哦!");
         }
     }

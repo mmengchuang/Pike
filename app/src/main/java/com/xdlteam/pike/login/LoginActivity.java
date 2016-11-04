@@ -1,5 +1,6 @@
 package com.xdlteam.pike.login;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,7 +16,6 @@ import com.xdlteam.pike.base.BaseActivity;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.home.HomeActivity;
 import com.xdlteam.pike.register.RegisterActivity;
-import com.xdlteam.pike.updateUserMessage.UpdateUserMessageActivity;
 
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.LogInListener;
@@ -24,6 +24,8 @@ public class LoginActivity extends BaseActivity {
     private LoginPresenter mLoginPresenter;
     private EditText etUserName,etPwd;
     private Button btnLogin;
+    private ProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,9 +67,11 @@ public class LoginActivity extends BaseActivity {
             return;
         }
         //进行登录
+        showLoadingDialog();//显示一个进度条对话框
         User.loginByAccount(userName, pwd, new LogInListener<User>() {
             @Override
             public void done(User user, BmobException e) {
+                dismissProcessDialog();//隐藏进度条对话框
                 if(e!=null){
                     Toast.makeText(LoginActivity.this,"登录失败",Toast.LENGTH_SHORT).show();
                     return;
@@ -77,16 +81,6 @@ public class LoginActivity extends BaseActivity {
                 Toast.makeText(LoginActivity.this,"登录成功",Toast.LENGTH_SHORT).show();
                 MyApplcation.sUser=user;
                 finish();
-
-//                if(user!=null){
-//                    SharedPreferences sp=getSharedPreferences("userinfo.txt",MODE_PRIVATE);
-//                    SharedPreferences.Editor edit = sp.edit();
-////                    edit.putString("userName",userName);
-////                    edit.putString("pwd",pwd);
-////                    edit.commit();
-//                    Toast.makeText(LoginActivity.this,"登录成功",Toast.LENGTH_SHORT).show();
-//
-//                }
             }
         });
 
@@ -95,8 +89,23 @@ public class LoginActivity extends BaseActivity {
     public void registerClick(View v){
         startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
     }
-
-
+    public void showLoadingDialog(){
+        if(dialog==null){
+            dialog = new ProgressDialog(this);
+        }
+        dialog.setTitle("");
+        dialog.setMessage("登陆中...");
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+    /**
+     * 功能 ：取消一个进度条对话框
+     */
+    public void dismissProcessDialog(){
+        if(dialog!=null){
+            dialog.dismiss();
+        }
+    }
     @Override
     protected void unBind() {
         mLoginPresenter.unBind();

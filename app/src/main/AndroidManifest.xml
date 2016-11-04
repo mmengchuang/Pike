@@ -37,24 +37,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".login.LoginActivity">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN"/>-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
-            <!--</intent-filter>-->
-        </activity>
-        <activity android:name=".register.RegisterActivity"></activity>
-        <activity android:name=".camera.CameraActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".register.RegisterActivity"></activity>
+        <activity android:name=".camera.CameraActivity"/>
         <activity android:name=".home.HomeActivity"/>
         <activity android:name=".release.ReleaseActivity">
         </activity>
-        <activity android:name=".location.LocationActivity"></activity>
+        <activity android:name=".location.LocationActivity"/>
         <!--百度定位-->
         <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">
         </service>
