@@ -1,5 +1,6 @@
 package com.xdlteam.pike.camera;
 
+import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.xdlteam.pike.R;
 import com.xdlteam.pike.contract.IFragCameraContract;
+import com.xdlteam.pike.release.ReleaseActivity;
 import com.xdlteam.pike.widget.RecoderProgress;
 
 import butterknife.BindView;
@@ -107,21 +109,6 @@ public class CameraFrament extends BaseFragment implements IFragCameraContract.I
     }
 
     @Override
-    public void showLoadingDialog(String title, String msg, boolean flag) {
-
-    }
-
-    @Override
-    public void canelLoadingDialog() {
-
-    }
-
-    @Override
-    public void jumpActivity() {
-
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
         //释放相机资源
@@ -161,6 +148,8 @@ public class CameraFrament extends BaseFragment implements IFragCameraContract.I
             case R.id.act_camera_iv_music:
                 break;
             case R.id.act_camera_iv_del:
+                mPresenter.delFile(mPresenter.getmFilePath());
+                mActCameraIvOk.setVisibility(View.INVISIBLE);
                 break;
             case R.id.act_camera_iv_start:
                 if (!flag) {//如果是第一次点击
@@ -200,7 +189,10 @@ public class CameraFrament extends BaseFragment implements IFragCameraContract.I
                 }
                 flag = !flag;
                 break;
-            case R.id.act_camera_iv_ok:
+            case R.id.act_camera_iv_ok://点击对勾按钮
+                Intent intent = new Intent(getContext(), ReleaseActivity.class);//跳转到发布视频页面
+                intent.putExtra("ViedeoLocalURL",mPresenter.getmFilePath());//将小视频路径传递到下一个页面
+                startActivity(intent);
                 break;
         }
     }

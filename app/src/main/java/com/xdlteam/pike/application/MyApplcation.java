@@ -5,6 +5,9 @@ import android.app.Application;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.config.Contracts;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import cn.bmob.sms.BmobSMS;
 import cn.bmob.v3.Bmob;
 
@@ -19,6 +22,7 @@ public class MyApplcation extends Application {
 
 
     public static User sUser;
+    private static Map<String,Object> dataMaps;
 
     @Override
     public void onCreate() {
@@ -30,5 +34,29 @@ public class MyApplcation extends Application {
         //初始化Bmob 支付SDK
         //Bmob自动更新,这里只用一次
         //BmobUpdateAgent.initAppVersion();
+        dataMaps = new HashMap<>();
     }
+
+    /**
+     * 保存信息
+     * @param key
+     * @param values
+     */
+    public static void putDatas(String key,Object values ) {
+        dataMaps.put(key,values);
+    }
+
+    /**
+     * 获取数据
+     * @param key
+     * @param flag
+     * @return
+     */
+    public static Object getDatas(String key,boolean flag){
+        if (flag) {
+            return dataMaps.remove(key);
+        }
+        return dataMaps.get(key);
+    }
+
 }
