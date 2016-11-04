@@ -15,27 +15,21 @@ import com.xdlteam.pike.base.BaseView;
 
 public class IReleaseContract {
     public interface IReleaseView extends BaseView{
-        void setPresenter(BasePresenter presenter);
        /**
         * Toast数据
         * @param msg
         */
        void showMsg(String msg);
 
+        /**
+         * 加载提示框
+         */
         void showLoadingDialog();
 
         /**
-        * 展示一个进度条对话框
-        * @param title 标题
-        * @param msg 显示的内容
-        * @param flag 是否可以取消
-        */
-       void showLoadingDialog(String title, String msg, boolean flag);
-
-       /**
-        * 取消进度条
-        */
-       void canelLoadingDialog();
+         * 取消加载提示框
+         */
+        void dismissProcessDialog();
 
        /**
         * activity的跳转
@@ -49,6 +43,7 @@ public class IReleaseContract {
         EditText getmActReleaseEtContent();
 
         Button getmActReleaseBtnLocation();
+
     }
     public interface IReleasePresenter extends BasePresenter {
 

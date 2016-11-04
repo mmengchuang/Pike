@@ -1,9 +1,8 @@
 package com.xdlteam.pike.release;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
@@ -12,10 +11,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bigkoo.svprogresshud.SVProgressHUD;
 import com.xdlteam.pike.R;
 import com.xdlteam.pike.base.BaseActivity;
-import com.xdlteam.pike.base.BasePresenter;
 import com.xdlteam.pike.contract.IReleaseContract;
 import com.xdlteam.pike.location.LocationActivity;
 
@@ -44,32 +41,15 @@ public class ReleaseActivity extends BaseActivity implements IReleaseContract.IR
     @BindView(R.id.act_release_gv)
     GridView mActReleaseGv;
     private IReleaseContract.IReleasePresenter mPresenter;
-    private SVProgressHUD mSVProgressHUD;
     int progress = 0;
-    private Handler mHandler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-//            progress = progress + 5;
-            if (mSVProgressHUD.getProgressBar().getMax() != mSVProgressHUD.getProgressBar().getProgress()) {
-                mSVProgressHUD.getProgressBar().setProgress(progress);
-                mSVProgressHUD.setText("进度 "+progress+"%");
+    //普通进度条对话框
+    private ProgressDialog dialog;
 
-                mHandler.sendEmptyMessageDelayed(0,500);
-            }
-            else{
-                mSVProgressHUD.dismiss();
-            }
-
-        }
-    };
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_release);
         ButterKnife.bind(this);
-        //初始化进度条
-        mSVProgressHUD = new SVProgressHUD(this);
         mPresenter = new ReleasePresenterImpl(this);
         mPresenter.initData();
         mPresenter.setDatas(getDatas());
@@ -88,12 +68,6 @@ public class ReleaseActivity extends BaseActivity implements IReleaseContract.IR
     protected void unBind() {
 
     }
-
-    @Override
-    public void setPresenter(BasePresenter presenter) {
-
-    }
-
     @Override
     public void showMsg(String msg) {
         Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
@@ -101,26 +75,28 @@ public class ReleaseActivity extends BaseActivity implements IReleaseContract.IR
 
     @Override
     public void showLoadingDialog(){
-        mSVProgressHUD.show();
+        if(dialog==null){
+            dialog = new ProgressDialog(this);
+        }
+        dialog.setTitle("");
+        dialog.setMessage("加载中...");
+        dialog.setCancelable(false);
+        dialog.show();
     }
+    /**
+     * 功能 ：取消一个进度条对话框
+     */
     @Override
-    public void showLoadingDialog(String title, String msg, boolean flag) {
-        progress = 0;
-        mSVProgressHUD.getProgressBar().setProgress(progress);//先重设了进度再显示，避免下次再show会先显示上一次的进度位置所以要先将进度归0
-        mSVProgressHUD.showWithProgress("进度 " + progress + "%", SVProgressHUD.SVProgressHUDMaskType.Black);
-//        mHandler.sendEmptyMessageDelayed(0,500);
-        progress = Integer.parseInt(msg);
-        mHandler.sendMessage(new Message());
+    public void dismissProcessDialog(){
+        if(dialog!=null){
+            dialog.dismiss();
+        }
     }
 
-    @Override
-    public void canelLoadingDialog() {
-        mSVProgressHUD.dismiss();
-    }
 
     @Override
     public void jumpActivity() {
-
+        finish();
     }
     @Override
     public ImageView getmActReleaseIvFirstVideo() {
@@ -153,6 +129,7 @@ public class ReleaseActivity extends BaseActivity implements IReleaseContract.IR
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.act_release_iv_exit://退出发布
+                finish();
                 break;
             case R.id.act_release_iv_ok://点击发布
                 mPresenter.release();
