@@ -10,10 +10,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.xdlteam.pike.R;
+import com.xdlteam.pike.application.MyApplcation;
 import com.xdlteam.pike.base.BaseActivity;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.home.HomeActivity;
 import com.xdlteam.pike.register.RegisterActivity;
+import com.xdlteam.pike.updateUserMessage.UpdateUserMessageActivity;
 
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.LogInListener;
@@ -73,6 +75,9 @@ public class LoginActivity extends BaseActivity {
                 Intent intent = HomeActivity.newIntent(LoginActivity.this);
                 startActivity(intent);
                 Toast.makeText(LoginActivity.this,"登录成功",Toast.LENGTH_SHORT).show();
+                MyApplcation.sUser=user;
+                finish();
+
 //                if(user!=null){
 //                    SharedPreferences sp=getSharedPreferences("userinfo.txt",MODE_PRIVATE);
 //                    SharedPreferences.Editor edit = sp.edit();
@@ -90,7 +95,6 @@ public class LoginActivity extends BaseActivity {
     public void registerClick(View v){
         startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
     }
-
 
 
     @Override
