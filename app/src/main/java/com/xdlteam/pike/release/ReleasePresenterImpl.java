@@ -73,14 +73,14 @@ public class ReleasePresenterImpl implements IReleaseContract.IReleasePresenter 
 
     @Override
     public void release() {
-        LogUtils.i("myTag","点击发布按钮!");
+        LogUtils.i("myTag", "点击发布按钮!");
         //显示普通进度条
         mReleaseView.showLoadingDialog();
         //获取第一帧图片的文件
         File imgFile = saveBitmapFile(mBitmap);
         //获取第一帧图片的路径
         String filePathImg = imgFile.getPath();
-        LogUtils.i("myTag","我获取到的文件路径"+filePathImg);
+        LogUtils.i("myTag", "我获取到的文件路径" + filePathImg);
         //获取视频的路径
         String filePathVideo = mVideoURL;
         final String[] filePaths = new String[2];
@@ -92,39 +92,40 @@ public class ReleasePresenterImpl implements IReleaseContract.IReleasePresenter 
             public void onSuccess(List<BmobFile> files, List<String> urls) {
                 //1、files-上传完成后的BmobFile集合，是为了方便大家对其上传后的数据进行操作，例如你可以将该文件保存到表中
                 //2、urls-上传文件的完整url地址
-                if(urls.size()==filePaths.length){//如果数量相等，则代表文件全部上传完成
+                if (urls.size() == filePaths.length) {//如果数量相等，则代表文件全部上传完成
                     //do something
-                    LogUtils.i("myTag","文件上传成功!");
-                    saveVideos(files.get(0),files.get(1));
+                    LogUtils.i("myTag", "文件上传成功!");
+                    saveVideos(files.get(0), files.get(1));
                 }
             }
 
             @Override
             public void onError(int statuscode, String errormsg) {
-             LogUtils.e("myTag","错误码"+statuscode +",错误描述："+errormsg);
+                LogUtils.e("myTag", "错误码" + statuscode + ",错误描述：" + errormsg);
             }
 
             @Override
-            public void onProgress(int curIndex, int curPercent, int total,int totalPercent) {
+            public void onProgress(int curIndex, int curPercent, int total, int totalPercent) {
                 //1、curIndex--表示当前第几个文件正在上传
                 //2、curPercent--表示当前上传文件的进度值（百分比）
                 //3、total--表示总的上传文件数
                 //4、totalPercent--表示总的上传进度（百分比）
-                LogUtils.i("myTag","当前第"+curIndex+" 文件正在上传,"+"当前上传文件的进度 "+curPercent+
-                ",总的上传文件数 "+total+"总的上传进度 "+totalPercent);
+                LogUtils.i("myTag", "当前第" + curIndex + " 文件正在上传," + "当前上传文件的进度 " + curPercent +
+                        ",总的上传文件数 " + total + "总的上传进度 " + totalPercent);
             }
         });
     }
 
     /**
      * 保存视频到数据库
-     * @param bmobImgFile 上传后的视频的第一帧图片
+     *
+     * @param bmobImgFile  上传后的视频的第一帧图片
      * @param bmobVieoFile 上传后的视频文件
      */
     private void saveVideos(BmobFile bmobImgFile, BmobFile bmobVieoFile) {
         //显示普通进度
 //        mReleaseView.showLoadingDialog();
-        LogUtils.i("myTag","我在进行保存操作");
+        LogUtils.i("myTag", "我在进行保存操作");
         //更新数据表
         com.xdlteam.pike.bean.Video mVideo = new Video();
         //设置发布小视频的用户ID,需要更改,测试时使用固定的
@@ -171,8 +172,8 @@ public class ReleasePresenterImpl implements IReleaseContract.IReleasePresenter 
      * @param bitmap
      */
     private File saveBitmapFile(Bitmap bitmap) {
-        File file = new File("/mnt/sdcard/Pike/"+System.currentTimeMillis()+".jpg");//将要保存图片的路径
-        if (!file.exists()){//文件不存在，则创建文件
+        File file = new File("/mnt/sdcard/Pike/" + System.currentTimeMillis() + ".jpg");//将要保存图片的路径
+        if (!file.exists()) {//文件不存在，则创建文件
             try {
                 file.createNewFile();
             } catch (IOException e) {
