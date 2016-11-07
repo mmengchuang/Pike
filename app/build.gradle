@@ -50,7 +50,7 @@ dependencies {
     compile 'cn.bmob.android:http-legacy:1.0'
     //图片加载框架
     compile 'com.squareup.picasso:picasso:2.5.2'
-    //RxAndroid
+
 /*    compile 'io.reactivex:rxandroid:1.1.0'
     //RxJava
     compile 'io.reactivex:rxjava:1.1.0'*/

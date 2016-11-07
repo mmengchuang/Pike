@@ -33,7 +33,7 @@ public class LoginActivity extends BaseActivity {
     private void initView() {
         etUserName= (EditText) findViewById(R.id.act_login_username);
         etPwd= (EditText) findViewById(R.id.act_login_pwd);
-        btnLogin= (Button) findViewById(R.id.act_login_btn);
+//        btnLogin= (Button) findViewById(R.id.act_login_btn);
     }
     //初始化数据
     private void initDatas() {
