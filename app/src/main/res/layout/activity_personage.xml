@@ -65,7 +65,7 @@
                     android:padding="16dp">
 
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/imageView"
+                        android:id="@+id/act_personage_userimage"
                         android:layout_width="72dp"
                         android:layout_height="72dp"
                         android:layout_alignParentStart="true"
@@ -75,9 +75,10 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:layout_width="16dp"
                         android:layout_height="16dp"
-                        android:layout_alignBottom="@id/imageView"
-                        android:layout_alignEnd="@id/imageView"
-                        android:layout_alignRight="@id/imageView"
+                        android:id="@+id/act_personage_sex_imageview"
+                        android:layout_alignBottom="@id/act_personage_userimage"
+                        android:layout_alignEnd="@id/act_personage_userimage"
+                        android:layout_alignRight="@id/act_personage_userimage"
                         android:layout_marginBottom="5dp"
                         android:layout_marginRight="5dp"
                         android:src="@drawable/dialog_xingbie_nan"/>
@@ -140,7 +141,7 @@
                         android:layout_marginLeft="16dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
-                        android:layout_toEndOf="@+id/imageView"
+                        android:layout_toEndOf="@+id/act_personage_userimage"
                         android:background="@drawable/ic_act_personage_bg_line"
                         android:gravity="center"
                         android:padding="2dp"

@@ -5,8 +5,13 @@ package com.xdlteam.pike.home;
  */
 
 import com.xdlteam.pike.bean.User;
+import com.xdlteam.pike.bean.Video;
 
+import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import rx.Observable;
 import rx.Single;
 
 /**
@@ -22,4 +27,5 @@ public class HomePresenter {
     public Single<User> getUser() {
         return Single.just(BmobUser.getCurrentUser(User.class));
     }
+
 }

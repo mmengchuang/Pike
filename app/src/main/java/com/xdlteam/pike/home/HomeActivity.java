@@ -182,4 +182,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 		Intent intent = PersonageActivity.newIntent(this);
 		startActivity(intent);
 	}
+
+	public HomePresenter getPresenter() {
+		return mHomePresenter;
+	}
 }

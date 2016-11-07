@@ -7,24 +7,28 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.xdlteam.pike.R;
-import com.xdlteam.pike.bean.Video;
-import com.xdlteam.pike.home.FindFragmentAdapter;
+import com.xdlteam.pike.bean.User;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PersonageActivity extends AppCompatActivity {
 
+	@BindView(R.id.act_personage_userimage)
+	CircleImageView mActPersonageUserimage;
+	@BindView(R.id.act_personage_sex_imageview)
+	CircleImageView mActPersonageSexImageview;
+	private User mUser;
+	private PersonagePresenter mPresenter;
 	@BindView(R.id.act_personage_toolbar)
 	Toolbar mActPersonageToolbar;
 	@BindView(R.id.act_personage_toolbarlayout)
@@ -45,6 +49,9 @@ public class PersonageActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_personage);
 		ButterKnife.bind(this);
+		mPresenter = new PersonagePresenter(this);
+
+		mUser = mPresenter.getUser();
 
 		mActPersonageToolbar.setTitle("伊尹");
 		setSupportActionBar(mActPersonageToolbar);
@@ -59,11 +66,35 @@ public class PersonageActivity extends AppCompatActivity {
 		if (actionBar != null) {
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
+
+		if (mUser != null) {
+			Picasso.with(this)
+					.load(mUser.getUserHeadPortrait().getFileUrl())
+					.resize(72, 72)
+					.centerCrop()
+					.into(mActPersonageUserimage);
+
+			/*
+			设置用户的性别
+			 */
+			int resid = -1;
+			if (mUser.getUserSex().equals("男")) {
+				resid = R.drawable.dialog_xingbie_nan;
+			} else if (mUser.getUserSex().equals("女")) {
+				resid = R.drawable.dialog_xingbie_nv;
+			}
+			Picasso.with(this)
+					.load(resid)
+					.resize(16, 16)
+					.centerCrop()
+					.into(mActPersonageSexImageview);
+		}
+
 		mRandom = new Random();
 
 		setImageHead();
 
-		ArrayList<Video> arrayList = new ArrayList<>();
+		/*ArrayList<Video> arrayList = new ArrayList<>();
 		arrayList.add(new Video());
 		arrayList.add(new Video());
 		arrayList.add(new Video());
@@ -84,7 +115,7 @@ public class PersonageActivity extends AppCompatActivity {
 		mActPersonageRecyclerview.setAdapter(fragmentAdapter);
 
 		fragmentAdapter.addAll(arrayList);
-		mActPersonageRecyclerview.setVisibility(View.GONE);
+		mActPersonageRecyclerview.setVisibility(View.GONE);*/
 	}
 
 	/**

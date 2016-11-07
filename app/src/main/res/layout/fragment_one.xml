@@ -1,12 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+    >
 
-    <TextView
-        android:text="1"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView"/>
-</LinearLayout>
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_marginBottom="?actionBarSize">
+
+        <!-- #cdcdcd 图片颜色-->
+        <ImageView
+            android:layout_width="108dp"
+            android:layout_height="108dp"
+            android:src="@drawable/ic_renqun"
+            android:layout_margin="4dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="你关注的用户太少"
+            android:padding="4dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="快去找点好玩的关注一下吧~"
+            android:padding="4dp"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_guanzhutongxu_btn"
+            android:gravity="center"
+            android:text="关注通讯录好友"
+            android:textColor="#ffffff"
+            android:elevation="4dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginBottom="4dp"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:background="@drawable/ic_ganxinqu_yonghu_btn"
+            android:text="你可能感兴趣的用户"
+            android:elevation="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"/>
+    </LinearLayout>
+</FrameLayout>
