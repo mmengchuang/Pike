@@ -1,5 +1,7 @@
 package com.xdlteam.pike.bean;
 
+import java.util.ArrayList;
+
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 
@@ -12,6 +14,30 @@ public class User extends BmobUser {
     private String userNick;
     private BmobFile userHeadPortrait;
     private String userSex;
+    private ArrayList<String> userShouCang;
+    private ArrayList<String> userGuanZhu;
+
+    public ArrayList<String> getUserShouCang() {
+        if(userShouCang==null){
+            userShouCang=new ArrayList<>();
+        }
+        return userShouCang;
+    }
+
+    public void setUserShouCang(ArrayList<String> userShouCang) {
+        this.userShouCang = userShouCang;
+    }
+
+    public ArrayList<String> getUserGuanZhu() {
+        if(userGuanZhu==null){
+            userGuanZhu=new ArrayList<>();
+        }
+        return userGuanZhu;
+    }
+
+    public void setUserGuanZhu(ArrayList<String> userGuanZhu) {
+        this.userGuanZhu = userGuanZhu;
+    }
 
     public String getUserNick() {
         return userNick;

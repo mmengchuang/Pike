@@ -1,24 +1,25 @@
 package com.xdlteam.pike.home;
 
+import android.content.Intent;
 import android.databinding.ObservableArrayList;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.github.nitrico.lastadapter.LastAdapter;
 import com.xdlteam.pike.BR;
 import com.xdlteam.pike.R;
 import com.xdlteam.pike.bean.Video;
+import com.xdlteam.pike.videodetails.VideoDetailsActivity;
 import com.xdlteam.pike.viewmodel.VideoModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -130,9 +131,9 @@ public class FindFragment extends Fragment implements LastAdapter.OnClickListene
 
 	@Override
 	public void onClick(@NotNull Object o, @NotNull View view, int i, int i1) {
-	    /*Intent intent = new Intent(getActivity(), TestActivity.class);
+	    Intent intent = new Intent(getActivity(), VideoDetailsActivity.class);
 	    Video video= (Video) o;
         intent.putExtra("VIDEO", (Parcelable) video);
-        startActivity(intent);*/
+        startActivity(intent);
 	}
 }

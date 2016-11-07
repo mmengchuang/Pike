@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/view_share_pengyouquan"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/share_dengxiang_iv1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/pengyouquan" />
+
+            <TextView
+                android:id="@+id/share_dengxiang_name1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/share_dengxiang_iv1"
+                android:layout_centerHorizontal="true"
+                android:text="微信朋友圈"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/view_share_haoyou"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/share_dengxiang_iv2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/weixinhaoyou" />
+
+            <TextView
+                android:id="@+id/share_dengxiang_name2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/share_dengxiang_iv2"
+                android:layout_centerHorizontal="true"
+                android:text="微信好友"
+                android:textSize="16sp" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/view_share_qqhaoyou"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/share_dengxiang_iv3"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/qqhaoyouyou" />
+
+            <TextView
+                android:id="@+id/share_dengxiang_name3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/share_dengxiang_iv3"
+                android:layout_centerHorizontal="true"
+                android:text="QQ好友"
+                android:textSize="16sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#e6e6e6" />
+
+    <Button
+        android:id="@+id/share_fenxiang_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#e6e6e6"
+        android:text="取消"
+        android:textSize="20sp" />
+
+</LinearLayout>

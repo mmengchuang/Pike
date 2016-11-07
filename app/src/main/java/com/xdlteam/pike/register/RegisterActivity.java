@@ -312,6 +312,7 @@ public class RegisterActivity extends BaseActivity {
                     user.setUsername(strPhoneNumber);
                     user.setPassword(strUserPwd);
                     user.setUserNick(strUserNick);
+                    user.setUserSex(strUserSex);
                     user.setMobilePhoneNumberVerified(true);
                     user.setMobilePhoneNumber(strPhoneNumber);
                     user.setUserHeadPortrait(new BmobFile(file));
