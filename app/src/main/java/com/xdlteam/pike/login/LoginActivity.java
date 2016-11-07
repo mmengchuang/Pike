@@ -29,12 +29,13 @@ public class LoginActivity extends BaseActivity {
         initDatas();
         initOpers();
     }
+    //初始化视图组件
     private void initView() {
         etUserName= (EditText) findViewById(R.id.act_login_username);
         etPwd= (EditText) findViewById(R.id.act_login_pwd);
         btnLogin= (Button) findViewById(R.id.act_login_btn);
     }
-
+    //初始化数据
     private void initDatas() {
         SharedPreferences sp=getSharedPreferences("userinfo.txt",MODE_PRIVATE);
         String userName = sp.getString("userName", null);
@@ -45,9 +46,8 @@ public class LoginActivity extends BaseActivity {
         etUserName.setText(userName);
         etPwd.setText(pwd);
     }
-
+    //初始化视图操作
     private void initOpers() {
-
 
     }
     //登录按钮点击事件
@@ -87,13 +87,18 @@ public class LoginActivity extends BaseActivity {
     }
     //注册按钮点击事件
     public void registerClick(View v){
+        //跳转至注册页面
         startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
     }
-
-
 
     @Override
     protected void unBind() {
         mLoginPresenter.unBind();
     }
+
+    public void qqClick(View v){
+        //跳转至qq登录页面
+        startActivity(new Intent(LoginActivity.this,QQLoginActivity.class));
+    }
+
 }

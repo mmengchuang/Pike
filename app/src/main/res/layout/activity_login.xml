@@ -102,7 +102,7 @@
             android:textColor="#999999"
             android:text="登录"
             android:background="@drawable/select_act_login_et"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <View
@@ -110,8 +110,67 @@
             android:layout_height="0dp"
             android:layout_weight="1"></View>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <LinearLayout
+                android:onClick="qqClick"
+                android:clickable="true"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                >
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/qq"
+
+                />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                >
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/weixin"
+                />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                >
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/sinaweibo"
+                />
+            </LinearLayout>
+
+
+
+
+
+
+        </LinearLayout>
+
+
+
+
 
         <TextView
+            android:layout_marginTop="10dp"
             android:onClick="registerClick"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
