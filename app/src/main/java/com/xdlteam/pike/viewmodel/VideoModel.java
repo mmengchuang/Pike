@@ -23,13 +23,14 @@ import rx.functions.Action1;
 public class VideoModel {
 	private BmobQuery<Video> mVideoBmobQuery;
 	private static final int limit = 3;//每次查询数量
-	private static Random sRandom = new Random();
 
 	public VideoModel() {
 		this.mVideoBmobQuery = new BmobQuery<>();
 	}
 
 	public Observable<List<Video>> getVideos(int spik) {
+		mVideoBmobQuery.setSkip(spik);
+		mVideoBmobQuery.setLimit(limit);
 		mVideoBmobQuery.order("-createdAt");
 		return mVideoBmobQuery.findObjectsObservable(Video.class);
 	}
