@@ -2,6 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <!--NavigationView的下面布局-->
     <group android:checkableBehavior="single">
-        <item android:title="1"></item>
+        <item
+            android:id="@+id/drawer_view_chazhao"
+            android:icon="@drawable/ic_drawer_chazhao"
+            android:title="查找"/>
+        <item
+            android:id="@+id/drawer_view_seting"
+            android:icon="@drawable/ic_drawer_seting"
+            android:title="设置"/>
+        <item
+            android:id="@+id/drawer_view_wenjian"
+            android:icon="@drawable/ic_drawer_wenjian"
+            android:title="本地作品集"/>
     </group>
 </menu>
