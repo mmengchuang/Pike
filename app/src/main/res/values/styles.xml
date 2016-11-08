@@ -12,4 +12,9 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+
+    <style name="MyButton" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">#22adee</item>
+        <item name="colorButtonNormal">#0cb0af</item>
+    </style>
 </resources>

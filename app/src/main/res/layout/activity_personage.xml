@@ -51,8 +51,8 @@
             android:layout_height="match_parent"
             android:fillViewport="true"
             android:scrollbars="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             >
+            <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -73,9 +73,9 @@
                         android:src="@drawable/ic_user_image_test"/>
 
                     <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/act_personage_sex_imageview"
                         android:layout_width="16dp"
                         android:layout_height="16dp"
-                        android:id="@+id/act_personage_sex_imageview"
                         android:layout_alignBottom="@id/act_personage_userimage"
                         android:layout_alignEnd="@id/act_personage_userimage"
                         android:layout_alignRight="@id/act_personage_userimage"
@@ -225,6 +225,7 @@
                         android:src="@drawable/ic_user_image_test"
                         />
                 </LinearLayout>
+
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -234,6 +235,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         />
+
                     <ImageView
                         android:id="@+id/act_personage_frameLayout_iv"
                         android:layout_width="match_parent"

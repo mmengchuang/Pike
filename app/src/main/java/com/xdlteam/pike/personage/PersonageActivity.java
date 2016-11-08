@@ -2,6 +2,7 @@ package com.xdlteam.pike.personage;
 
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.ObservableArrayList;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
@@ -14,12 +15,15 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import com.xdlteam.pike.R;
 import com.xdlteam.pike.bean.User;
+import com.xdlteam.pike.bean.Video;
+import com.xdlteam.pike.viewmodel.UserModel;
 
 import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import rx.subscriptions.CompositeSubscription;
 
 public class PersonageActivity extends AppCompatActivity {
 
@@ -28,7 +32,7 @@ public class PersonageActivity extends AppCompatActivity {
 	@BindView(R.id.act_personage_sex_imageview)
 	CircleImageView mActPersonageSexImageview;
 	private User mUser;
-	private PersonagePresenter mPresenter;
+	private UserModel mUserModel;
 	@BindView(R.id.act_personage_toolbar)
 	Toolbar mActPersonageToolbar;
 	@BindView(R.id.act_personage_toolbarlayout)
@@ -38,6 +42,8 @@ public class PersonageActivity extends AppCompatActivity {
 	@BindView(R.id.act_personage_recyclerview)
 	RecyclerView mActPersonageRecyclerview;
 	private Random mRandom;
+	private ObservableArrayList<Video> mVideos;
+	private CompositeSubscription mSubscription;
 
 	public static Intent newIntent(Context context) {
 		Intent intent = new Intent(context, PersonageActivity.class);
@@ -49,9 +55,12 @@ public class PersonageActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_personage);
 		ButterKnife.bind(this);
-		mPresenter = new PersonagePresenter(this);
+		mUserModel = new UserModel();
+		mUser=mUserModel.getUser();
 
-		mUser = mPresenter.getUser();
+		mSubscription = new CompositeSubscription();
+
+
 
 		mActPersonageToolbar.setTitle("伊尹");
 		setSupportActionBar(mActPersonageToolbar);
@@ -88,10 +97,11 @@ public class PersonageActivity extends AppCompatActivity {
 					.resize(16, 16)
 					.centerCrop()
 					.into(mActPersonageSexImageview);
+
 		}
 
-		mRandom = new Random();
 
+		mRandom = new Random();
 		setImageHead();
 
 		/*ArrayList<Video> arrayList = new ArrayList<>();

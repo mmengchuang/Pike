@@ -24,7 +24,8 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        mLoginPresenter = new LoginPresenter(this);
+        setContentView(R.layout.activity_login1);
+//        mLoginPresenter = new LoginPresenter(this);
         initView();
         initDatas();
         initOpers();
@@ -93,7 +94,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void unBind() {
-        mLoginPresenter.unBind();
+//        mLoginPresenter.unBind();
     }
 
     public void qqClick(View v){

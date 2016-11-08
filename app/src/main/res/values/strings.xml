@@ -2,6 +2,7 @@
     <string name="app_name">拍客</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="login_textbuttom">还没账号?<u>注册</u></string>
     <string-array name="home_activity_tabstitle">
         <item>关注</item>
         <item>发现</item>
