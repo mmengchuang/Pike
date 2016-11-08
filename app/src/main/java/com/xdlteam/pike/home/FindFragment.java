@@ -92,8 +92,10 @@ public class FindFragment extends Fragment implements LastAdapter.OnClickListene
 
     mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
       @Override public void onRefresh() {
+        mSwipeRefreshLayout.setEnabled(false);
         mVideos.clear();
         setVideos();
+        mSwipeRefreshLayout.setEnabled(true);
         mSwipeRefreshLayout.setRefreshing(false);
       }
     });
