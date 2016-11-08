@@ -1,7 +1,5 @@
 package com.xdlteam.pike.viewmodel;
 
-import android.databinding.ObservableArrayList;
-
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.bean.Video;
 
@@ -17,18 +15,21 @@ import rx.Observable;
 
 public class UserModel {
 	private User mUser;//当前用户
-	private int limit=5;
+	private static final int LIMIT =10;
 	public User getUser() {
 		mUser=BmobUser.getCurrentUser(User.class);
 		return mUser;
 	}
 
-	public Observable<List<Video>> getVideos(int spik) {
+	
+	public Observable<List<Video>> getVideos(int spik,String userId) {
 		BmobQuery<Video> query = new BmobQuery<>();
 		query.order("-createdAt");
 		query.setSkip(spik);
-		query.setLimit(limit);
-		query.addWhereEqualTo("userId", mUser.getObjectId());
+		query.setLimit(LIMIT);
+		query.addWhereEqualTo("userId", userId);
 		return query.findObjectsObservable(Video.class);
 	}
+
+
 }

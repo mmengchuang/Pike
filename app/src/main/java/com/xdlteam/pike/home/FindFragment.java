@@ -26,11 +26,17 @@ import com.xdlteam.pike.viewmodel.VideoModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -38,95 +44,113 @@ import rx.subscriptions.CompositeSubscription;
  */
 
 public class FindFragment extends Fragment implements LastAdapter.OnClickListener {
-  public static final String TAG = FindFragment.class.getSimpleName();
-  @BindView(R.id.fragment_find_recyclerview) RecyclerView mFragmentFindRecyclerview;/*
+	public static final String TAG = FindFragment.class.getSimpleName();
+	@BindView(R.id.fragment_find_recyclerview)
+	RecyclerView mFragmentFindRecyclerview;/*
   private ArrayList<Video> mVideos;*/
-  @BindView(R.id.fragent_find_swipeRefreshLayout) SwipeRefreshLayout mSwipeRefreshLayout;
-  private CompositeSubscription mSubscription;
-  private VideoModel mModel;
-  private ObservableArrayList<Video> mVideos;
+	@BindView(R.id.fragent_find_swipeRefreshLayout)
+	SwipeRefreshLayout mSwipeRefreshLayout;
+	private CompositeSubscription mSubscription;
+	private VideoModel mModel;
+	private ObservableArrayList<Video> mVideos;
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_find, container, false);
-    ButterKnife.bind(this, view);
-    return view;
-  }
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+	                         @Nullable Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_find, container, false);
+		ButterKnife.bind(this, view);
+		return view;
+	}
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
 
-    mSubscription = new CompositeSubscription();
-    mModel = new VideoModel();
-    mVideos = new ObservableArrayList<>();
-    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
-    mFragmentFindRecyclerview.setLayoutManager(gridLayoutManager);
+		mSubscription = new CompositeSubscription();
+		mModel = new VideoModel();
+		mVideos = new ObservableArrayList<>();
+		GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+		mFragmentFindRecyclerview.setLayoutManager(gridLayoutManager);
 
-    setVideos();
+		mSwipeRefreshLayout.setRefreshing(true);
+		mFragmentFindRecyclerview.setVisibility(View.INVISIBLE);
+		setVideos();
+		mFragmentFindRecyclerview.setVisibility(View.VISIBLE);
 
-    LastAdapter.with(mVideos, BR.item)
-        .map(Video.class, R.layout.fragment_find_item)
-        .onClickListener(this)
-        .into(mFragmentFindRecyclerview);
+		LastAdapter.with(mVideos, BR.item)
+				.map(Video.class, R.layout.fragment_find_item)
+				.onClickListener(this)
+				.into(mFragmentFindRecyclerview);
 
-    mFragmentFindRecyclerview.addOnScrollListener(
-        new EndlessRecyclerViewScrollListener(gridLayoutManager) {
-          @Override public void onLoadMore(int page, int totalItemsCount, final RecyclerView view) {
-            mSubscription.add(
-                mModel.getVideos(totalItemsCount).subscribe(new Subscriber<List<Video>>() {
-                  @Override public void onCompleted() {
+		mFragmentFindRecyclerview.addOnScrollListener(
+				new EndlessRecyclerViewScrollListener(gridLayoutManager) {
+					@Override
+					public void onLoadMore(int page, int totalItemsCount, final RecyclerView view) {
+						mSubscription.add(
+								mModel.getVideos(totalItemsCount).subscribe(new Subscriber<List<Video>>() {
+									@Override
+									public void onCompleted() {
 
-                  }
+									}
 
-                  @Override public void onError(Throwable throwable) {
-                    Snackbar.make(view, throwable.getMessage(), Snackbar.LENGTH_SHORT).show();
-                  }
+									@Override
+									public void onError(Throwable throwable) {
+										Snackbar.make(view, throwable.getMessage(), Snackbar.LENGTH_SHORT).show();
+									}
 
-                  @Override public void onNext(List<Video> videos) {
-                    mVideos.addAll(videos);
-                  }
-                }));
-          }
-        });
+									@Override
+									public void onNext(List<Video> videos) {
+										mVideos.addAll(videos);
+									}
+								}));
+					}
+				});
 
-    mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-      @Override public void onRefresh() {
-        mSwipeRefreshLayout.setEnabled(false);
-        mVideos.clear();
-        setVideos();
-        mSwipeRefreshLayout.setEnabled(true);
-        mSwipeRefreshLayout.setRefreshing(false);
-      }
-    });
-  }
+		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				mVideos.clear();
+				setVideos();
+			}
+		});
+	}
 
-  private void setVideos() {
-    mSubscription.add(mModel.getVideos(0).subscribe(new Observer<List<Video>>() {
-      @Override public void onCompleted() {
-        Log.d(TAG, "onCompleted: 视频加载完成");
-      }
+	private void setVideos() {
+		mSwipeRefreshLayout.setEnabled(false);
+		mSubscription.add(mModel.getVideos(0)
+				.subscribe(new Observer<List<Video>>() {
+					@Override
+					public void onCompleted() {
+						mSwipeRefreshLayout.setRefreshing(false);
+						Log.d(TAG, "onCompleted: 视频加载完成");
+						mSwipeRefreshLayout.setEnabled(true);
+					}
 
-      @Override public void onError(Throwable throwable) {
-        Snackbar.make(mFragmentFindRecyclerview, "视频不存在", Snackbar.LENGTH_SHORT).show();
-      }
+					@Override
+					public void onError(Throwable throwable) {
+						Snackbar.make(mFragmentFindRecyclerview, "视频不存在", Snackbar.LENGTH_SHORT).show();
+					}
 
-      @Override public void onNext(List<Video> videos) {
-        mVideos.addAll(videos);
-      }
-    }));
-  }
+					@Override
+					public void onNext(List<Video> videos) {
+						mVideos.addAll(videos);
+					}
+				}));
+	}
 
-  @Override public void onClick(@NotNull Object o, @NotNull View view, int i, int i1) {
-    Intent intent = new Intent(getActivity(), VideoDetailsActivity.class);
-    RxBus.getDefault().post((Video)o);
-    startActivity(intent);
-  }
+	@Override
+	public void onClick(@NotNull Object o, @NotNull View view, int i, int i1) {
+		Intent intent = new Intent(getActivity(), VideoDetailsActivity.class);
+		RxBus.getDefault().post((Video) o);
+		startActivity(intent);
+	}
 
-  @Override public void onDestroy() {
-    super.onDestroy();
-    if (mSubscription != null && !mSubscription.isUnsubscribed()) {
-      mSubscription.clear();
-    }
-  }
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (mSubscription != null && !mSubscription.isUnsubscribed()) {
+			mSubscription.clear();
+		}
+	}
 }

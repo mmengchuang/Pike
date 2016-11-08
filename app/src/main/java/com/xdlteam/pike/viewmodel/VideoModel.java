@@ -20,7 +20,7 @@ import rx.functions.Action1;
 
 public class VideoModel {
 	private BmobQuery<Video> mVideoBmobQuery;
-	private static final int limit = 3;//每次查询数量
+	private static final int limit = 10;//每次查询数量
 
 	public VideoModel() {
 		this.mVideoBmobQuery = new BmobQuery<>();
@@ -43,7 +43,7 @@ public class VideoModel {
 
 	@BindingAdapter("imageVideo")
 	public static void imageVideo(final ImageView view, String userId) {
-		BmobQuery<User> query = UserQueryPool.obtain();
+		BmobQuery<User> query = new BmobQuery<>();
 		query.getObjectObservable(User.class, userId)
 				.subscribe(new Action1<User>() {
 					@Override
@@ -53,7 +53,6 @@ public class VideoModel {
 								.into(view);
 					}
 				});
-		UserQueryPool.recycle(query);
 	}
 
 }
