@@ -26,7 +26,9 @@ import com.xdlteam.pike.R;
 import com.xdlteam.pike.application.MyApplcation;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.bean.Video;
+import com.xdlteam.pike.contract.IVideoContract;
 import com.xdlteam.pike.util.RxBus;
+import com.xdlteam.pike.video.VideoPlayPresenterImpl;
 
 import java.util.ArrayList;
 
@@ -41,7 +43,7 @@ import io.vov.vitamio.widget.VideoView;
 import rx.Subscription;
 import rx.functions.Action1;
 
-public class VideoDetailsActivity extends Activity {
+public class VideoDetailsActivity extends Activity implements IVideoContract.IVideoView{
 
     @BindView(R.id.activity_video_details_iv_back)
     ImageView mIvBack;
@@ -65,10 +67,11 @@ public class VideoDetailsActivity extends Activity {
     VideoView mSurfaceView;
     private Subscription mSubscription;
 
-
     private Video mVideo;
 
     private User mVideoUser;
+
+    private VideoPlayPresenterImpl mVideoPresenter;
 
 
     //微信APP_ID
@@ -87,7 +90,8 @@ public class VideoDetailsActivity extends Activity {
         setContentView(R.layout.activity_video_details);
         regToWx();
         ButterKnife.bind(this);
-
+        mVideoPresenter = new VideoPlayPresenterImpl(this);
+        mVideoPresenter.initData();
         initDatas();
         initViewOpers();
     }
@@ -103,6 +107,10 @@ public class VideoDetailsActivity extends Activity {
                     }
                 });
         Log.i("MyTag",mVideo.getUserId()+"userid");
+
+        //播放视频
+        mVideoPresenter.playfunction(mVideo.getVideo_content().getUrl());
+
         BmobQuery<User> query=new BmobQuery<>();
         query.getObject(mVideo.getUserId(), new QueryListener<User>() {
             @Override
@@ -272,6 +280,11 @@ public class VideoDetailsActivity extends Activity {
 //        req.scene=SendMessageToWX.Req.WXSceneTimeline;
 //
 //        api.sendReq(req);
+    }
+
+    @Override
+    public VideoView getVideoView() {
+        return mSurfaceView;
     }
 
     /**

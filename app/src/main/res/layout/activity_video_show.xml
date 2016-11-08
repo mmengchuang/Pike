@@ -7,5 +7,5 @@
     <io.vov.vitamio.widget.VideoView
         android:id="@+id/surface_view"
         android:layout_width="match_parent"
-        android:layout_height="300dp"></io.vov.vitamio.widget.VideoView>
+        android:layout_height="500dp"></io.vov.vitamio.widget.VideoView>
 </RelativeLayout>
