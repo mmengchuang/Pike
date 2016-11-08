@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
 
+import cn.bmob.v3.BmobACL;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
@@ -23,7 +24,7 @@ import cn.bmob.v3.datatype.BmobGeoPoint;
 /**
  * 小视频的bean
  */
-public class Video extends BmobObject implements Parcelable {
+public class Video extends BmobObject {
     private String userId;//视频是谁发布的
     private int loveCount;//点赞的数量,红心的数量
     private BmobFile video_image;//视频的缩略图
@@ -87,47 +88,5 @@ public class Video extends BmobObject implements Parcelable {
     public void setVideo_locaton(String video_locaton) {
         this.video_locaton = video_locaton;
     }
-
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.userId);
-        dest.writeInt(this.loveCount);
-        dest.writeSerializable(this.video_image);
-        dest.writeSerializable(this.video_point);
-        dest.writeString(this.video_locaton);
-        dest.writeSerializable(this.video_content);
-        dest.writeString(this.video_describe);
-    }
-
-    public Video() {
-    }
-
-    protected Video(Parcel in) {
-        this.userId = in.readString();
-        this.loveCount = in.readInt();
-        this.video_image = (BmobFile) in.readSerializable();
-        this.video_point = (BmobGeoPoint) in.readSerializable();
-        this.video_locaton = in.readString();
-        this.video_content = (BmobFile) in.readSerializable();
-        this.video_describe = in.readString();
-    }
-
-    public static final Parcelable.Creator<Video> CREATOR = new Parcelable.Creator<Video>() {
-        @Override
-        public Video createFromParcel(Parcel source) {
-            return new Video(source);
-        }
-
-        @Override
-        public Video[] newArray(int size) {
-            return new Video[size];
-        }
-    };
 
 }

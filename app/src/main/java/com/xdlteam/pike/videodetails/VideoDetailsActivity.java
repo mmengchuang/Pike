@@ -26,6 +26,7 @@ import com.xdlteam.pike.application.MyApplcation;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.bean.Video;
 
+import com.xdlteam.pike.util.RxBus;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -33,6 +34,10 @@ import butterknife.ButterKnife;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 import de.hdodenhof.circleimageview.CircleImageView;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class VideoDetailsActivity extends Activity {
 
@@ -54,9 +59,10 @@ public class VideoDetailsActivity extends Activity {
     TextView mTvPinglun;
     @BindView(R.id.activity_video_details_lv)
     ListView mLv;
+    private Subscription mSubscription;
 
 
-    private Video video;
+    private Video mVideo;
 
 
     //微信APP_ID
@@ -78,8 +84,15 @@ public class VideoDetailsActivity extends Activity {
     }
 
     private void initDatas() {
-        video=getIntent().getParcelableExtra("VIDEO");
-        Toast.makeText(this, video.getObjectId(), Toast.LENGTH_SHORT).show();
+        mSubscription= RxBus.getDefault()
+            .toObservable(Video.class)
+            .subscribe(new Action1<Video>() {
+                @Override public void call(Video video) {
+                    mVideo=video;
+                    Toast.makeText(VideoDetailsActivity.this, mVideo.getObjectId(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
     }
 
     /**
@@ -328,6 +341,13 @@ public class VideoDetailsActivity extends Activity {
                     }
                 }
             });
+        }
+    }
+
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
         }
     }
 }
