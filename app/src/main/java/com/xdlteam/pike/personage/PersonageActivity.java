@@ -5,30 +5,24 @@ import android.content.Intent;
 import android.databinding.ObservableArrayList;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.github.nitrico.lastadapter.LastAdapter;
 import com.squareup.picasso.Picasso;
 import com.xdlteam.pike.R;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.bean.Video;
 import com.xdlteam.pike.viewmodel.UserModel;
 
-import java.util.List;
 import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
-import rx.Subscriber;
 import rx.subscriptions.CompositeSubscription;
 
 public class PersonageActivity extends AppCompatActivity {
@@ -50,7 +44,6 @@ public class PersonageActivity extends AppCompatActivity {
 	private Random mRandom;
 	private ObservableArrayList<Video> mVideos;
 	private CompositeSubscription mSubscription;
-	private final static String TAG=PersonageActivity.class.getSimpleName();
 
 	public static Intent newIntent(Context context) {
 		Intent intent = new Intent(context, PersonageActivity.class);
@@ -63,13 +56,10 @@ public class PersonageActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_personage);
 		ButterKnife.bind(this);
 		mUserModel = new UserModel();
-		mUser = mUserModel.getUser();
-
-		//设置用户拥有的视频列表不可见
-		mActPersonageRecyclerview.setVisibility(View.GONE);
-		mActPersonageRecyclerview.setLayoutManager(new GridLayoutManager(this,3));
+		mUser=mUserModel.getUser();
 
 		mSubscription = new CompositeSubscription();
+
 
 
 		mActPersonageToolbar.setTitle("伊尹");
@@ -108,30 +98,6 @@ public class PersonageActivity extends AppCompatActivity {
 					.centerCrop()
 					.into(mActPersonageSexImageview);
 
-			mVideos = new ObservableArrayList<>();
-
-			mSubscription.add(mUserModel.getVideos(0, mUser.getObjectId())
-					.subscribe(new Subscriber<List<Video>>() {
-						@Override
-						public void onCompleted() {
-							Log.d(TAG, "onCompleted: 用户拥有的视频加载完成");
-						}
-
-						@Override
-						public void onError(Throwable throwable) {
-							Snackbar.make(mActPersonageUserimage,
-									throwable.getMessage(), Snackbar.LENGTH_SHORT).show();
-						}
-
-						@Override
-						public void onNext(List<Video> videos) {
-							mVideos.addAll(videos);
-						}
-					}));
-
-			if (mVideos.size() > 0) {
-				mActPersonageRecyclerview.setVisibility(View.VISIBLE);
-			}
 		}
 
 
