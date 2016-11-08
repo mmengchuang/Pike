@@ -75,11 +75,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <VideoView
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                />
-
+            <!--视频组件-->
+            <include layout="@layout/activity_video_show"></include>
             <LinearLayout
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"

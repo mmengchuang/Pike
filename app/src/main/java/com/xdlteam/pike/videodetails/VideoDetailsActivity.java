@@ -25,8 +25,8 @@ import com.xdlteam.pike.R;
 import com.xdlteam.pike.application.MyApplcation;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.bean.Video;
-
 import com.xdlteam.pike.util.RxBus;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -34,10 +34,9 @@ import butterknife.ButterKnife;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.vov.vitamio.widget.VideoView;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 public class VideoDetailsActivity extends Activity {
 
@@ -59,6 +58,8 @@ public class VideoDetailsActivity extends Activity {
     TextView mTvPinglun;
     @BindView(R.id.activity_video_details_lv)
     ListView mLv;
+    @BindView(R.id.surface_view)
+    VideoView mSurfaceView;
     private Subscription mSubscription;
 
 
@@ -66,13 +67,15 @@ public class VideoDetailsActivity extends Activity {
 
 
     //微信APP_ID
-    private static final String APP_ID="wx2352b826ff56e8c5";
+    private static final String APP_ID = "wx2352b826ff56e8c5";
     //IWXAPI是第三方app和微信通信的openapi接口
     private IWXAPI api;
-    private void regToWx(){
-        api= WXAPIFactory.createWXAPI(this,APP_ID,true);
+
+    private void regToWx() {
+        api = WXAPIFactory.createWXAPI(this, APP_ID, true);
         api.registerApp(APP_ID);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,14 +87,15 @@ public class VideoDetailsActivity extends Activity {
     }
 
     private void initDatas() {
-        mSubscription= RxBus.getDefault()
-            .toObservable(Video.class)
-            .subscribe(new Action1<Video>() {
-                @Override public void call(Video video) {
-                    mVideo=video;
-                    Toast.makeText(VideoDetailsActivity.this, mVideo.getObjectId(), Toast.LENGTH_SHORT).show();
-                }
-            });
+        mSubscription = RxBus.getDefault()
+                .toObservable(Video.class)
+                .subscribe(new Action1<Video>() {
+                    @Override
+                    public void call(Video video) {
+                        mVideo = video;
+                        Toast.makeText(VideoDetailsActivity.this, mVideo.getObjectId(), Toast.LENGTH_SHORT).show();
+                    }
+                });
 
     }
 
@@ -146,15 +150,15 @@ public class VideoDetailsActivity extends Activity {
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.view_share_haoyou://微信好友
-                        Toast.makeText(VideoDetailsActivity.this,"微信好友",Toast.LENGTH_SHORT).show();
-                        shareWX("测试分享",true);
+                        Toast.makeText(VideoDetailsActivity.this, "微信好友", Toast.LENGTH_SHORT).show();
+                        shareWX("测试分享", true);
                         break;
                     case R.id.view_share_pengyouquan://微信朋友圈
-                        Toast.makeText(VideoDetailsActivity.this,"微信朋友圈",Toast.LENGTH_SHORT).show();
-                        shareWX("测试分享",false);
+                        Toast.makeText(VideoDetailsActivity.this, "微信朋友圈", Toast.LENGTH_SHORT).show();
+                        shareWX("测试分享", false);
                         break;
                     case R.id.view_share_qqhaoyou://QQ好友
-                        Toast.makeText(VideoDetailsActivity.this,"QQ好友",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(VideoDetailsActivity.this, "QQ好友", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.share_fenxiang_btn://取消
                         break;
@@ -166,7 +170,7 @@ public class VideoDetailsActivity extends Activity {
         //获取自定义提示框的控件
         ViewGroup mViewWeixinHaoYou = (ViewGroup) view.findViewById(R.id.view_share_haoyou);
         ViewGroup mViewPengyouQuan = (ViewGroup) view.findViewById(R.id.view_share_pengyouquan);
-        ViewGroup mViewQQHaoYou= (ViewGroup) view.findViewById(R.id.view_share_qqhaoyou);
+        ViewGroup mViewQQHaoYou = (ViewGroup) view.findViewById(R.id.view_share_qqhaoyou);
         Button mBtnCancel = (Button) view.findViewById(R.id.share_fenxiang_btn);
         //给控件设置监听事件
         mViewQQHaoYou.setOnClickListener(listener);
@@ -182,24 +186,25 @@ public class VideoDetailsActivity extends Activity {
         params.gravity = Gravity.BOTTOM;
         window.setAttributes(params);
     }
+
     /**
      * 微信分享
      */
 
-    protected void shareWX(String str,boolean flag){
-        Log.i("MyTag","分享方法");
-        WXTextObject textObject=new WXTextObject();
-        textObject.text=str;
+    protected void shareWX(String str, boolean flag) {
+        Log.i("MyTag", "分享方法");
+        WXTextObject textObject = new WXTextObject();
+        textObject.text = str;
         //用WXTextObject
-        WXMediaMessage msg=new WXMediaMessage();
-        msg.mediaObject=textObject;
-        msg.description=str;
-        SendMessageToWX.Req req=new SendMessageToWX.Req();
-        req.transaction=System.currentTimeMillis()+"";
-        req.message=msg;
-        if(flag) {
+        WXMediaMessage msg = new WXMediaMessage();
+        msg.mediaObject = textObject;
+        msg.description = str;
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = System.currentTimeMillis() + "";
+        req.message = msg;
+        if (flag) {
             req.scene = SendMessageToWX.Req.WXSceneSession;
-        }else {
+        } else {
             req.scene = SendMessageToWX.Req.WXSceneTimeline;
         }
         api.sendReq(req);
@@ -221,31 +226,33 @@ public class VideoDetailsActivity extends Activity {
 //
 //        api.sendReq(req);
     }
+
     /**
      * 关注相关内部类
      */
-    class HolderFollow{
+    class HolderFollow {
         String userId;
         String videoUserId;
     }
 
     /**
      * 将当前视频发布人ID加入当前用户表关注字段
+     *
      * @param holder
      */
-    protected void userFollow(HolderFollow holder){
-        User user=new User();
-        ArrayList<String> als= MyApplcation.sUser.getUserGuanZhu();
+    protected void userFollow(HolderFollow holder) {
+        User user = new User();
+        ArrayList<String> als = MyApplcation.sUser.getUserGuanZhu();
         als.add(holder.videoUserId);
         user.setUserGuanZhu(als);
         user.update(holder.userId, new UpdateListener() {
             @Override
             public void done(BmobException e) {
-                if(e==null){
-                    Log.i("MyTag","关注成功");
-                    Toast.makeText(VideoDetailsActivity.this,"关注成功！",Toast.LENGTH_SHORT).show();
-                }else{
-                    Log.i("MyTag","关注失败："+e.getMessage()+","+e.getErrorCode());
+                if (e == null) {
+                    Log.i("MyTag", "关注成功");
+                    Toast.makeText(VideoDetailsActivity.this, "关注成功！", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.i("MyTag", "关注失败：" + e.getMessage() + "," + e.getErrorCode());
                 }
             }
         });
@@ -254,7 +261,7 @@ public class VideoDetailsActivity extends Activity {
     /**
      * 收藏相关内部类
      */
-    class HolderCollection{
+    class HolderCollection {
         User user;
         Video video;
         boolean flag;
@@ -264,26 +271,27 @@ public class VideoDetailsActivity extends Activity {
      * 根据用户需求进行收藏和取消收藏操作，flag为true，进行收藏操作，flag为false，进行取消收藏操作<br/>
      * 收藏，将当前视频ID加入当前用户表中<br/>
      * 取消收藏，将当前视频ID从当前用户表中删除
+     *
      * @param holder
      */
-    protected void userCollection(HolderCollection holder){
+    protected void userCollection(HolderCollection holder) {
 
-        if(holder.flag){//收藏操作
+        if (holder.flag) {//收藏操作
             /**
              * 将当前视频ID添加到当前用户表中
              */
-            User user=new User();
-            ArrayList<String> als= MyApplcation.sUser.getUserShouCang();
+            User user = new User();
+            ArrayList<String> als = MyApplcation.sUser.getUserShouCang();
             als.add(holder.video.getObjectId());
             user.setUserGuanZhu(als);
             user.update(holder.user.getObjectId(), new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
-                    if(e==null){
-                        Log.i("MyTag","收藏成功");
-                        Toast.makeText(VideoDetailsActivity.this,"收藏成功！",Toast.LENGTH_SHORT).show();
-                    }else{
-                        Log.i("MyTag","收藏失败："+e.getMessage()+","+e.getErrorCode());
+                    if (e == null) {
+                        Log.i("MyTag", "收藏成功");
+                        Toast.makeText(VideoDetailsActivity.this, "收藏成功！", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.i("MyTag", "收藏失败：" + e.getMessage() + "," + e.getErrorCode());
                     }
                 }
             });
@@ -291,17 +299,17 @@ public class VideoDetailsActivity extends Activity {
             /**
              * 将当前视频收藏人数加一
              */
-            int count=holder.video.getLoveCount()+1;
-            Video video=new Video();
+            int count = holder.video.getLoveCount() + 1;
+            Video video = new Video();
             video.setLoveCount(count);
-            video.update(holder.video.getObjectId(),  new UpdateListener() {
+            video.update(holder.video.getObjectId(), new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
-                    if(e==null){
-                        Log.i("MyTag","数量增加成功");
+                    if (e == null) {
+                        Log.i("MyTag", "数量增加成功");
 //                        Toast.makeText(VideoDetailsActivity.this,"取消收藏成功！",Toast.LENGTH_SHORT).show();
-                    }else{
-                        Log.i("MyTag","增加失败："+e.getMessage()+","+e.getErrorCode());
+                    } else {
+                        Log.i("MyTag", "增加失败：" + e.getMessage() + "," + e.getErrorCode());
                     }
                 }
             });
@@ -309,42 +317,43 @@ public class VideoDetailsActivity extends Activity {
             /**
              * 将当前视频ID从当前用户表中移除
              */
-            User user=new User();
-            ArrayList<String> als= MyApplcation.sUser.getUserShouCang();
+            User user = new User();
+            ArrayList<String> als = MyApplcation.sUser.getUserShouCang();
             als.remove(holder.video.getObjectId());
             user.setUserGuanZhu(als);
             user.update(holder.user.getObjectId(), new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
-                    if(e==null){
-                        Log.i("MyTag","取消收藏成功");
-                        Toast.makeText(VideoDetailsActivity.this,"取消收藏成功！",Toast.LENGTH_SHORT).show();
-                    }else{
-                        Log.i("MyTag","收藏失败："+e.getMessage()+","+e.getErrorCode());
+                    if (e == null) {
+                        Log.i("MyTag", "取消收藏成功");
+                        Toast.makeText(VideoDetailsActivity.this, "取消收藏成功！", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.i("MyTag", "收藏失败：" + e.getMessage() + "," + e.getErrorCode());
                     }
                 }
             });
             /**
              * 将当前视频收藏人数减一
              */
-            int count=holder.video.getLoveCount()-1;
-            Video video=new Video();
+            int count = holder.video.getLoveCount() - 1;
+            Video video = new Video();
             video.setLoveCount(count);
             video.update(holder.video.getObjectId(), new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
-                    if(e==null){
-                        Log.i("MyTag","数量减少成功");
+                    if (e == null) {
+                        Log.i("MyTag", "数量减少成功");
 //                        Toast.makeText(VideoDetailsActivity.this,"取消收藏成功！",Toast.LENGTH_SHORT).show();
-                    }else{
-                        Log.i("MyTag","减少失败："+e.getMessage()+","+e.getErrorCode());
+                    } else {
+                        Log.i("MyTag", "减少失败：" + e.getMessage() + "," + e.getErrorCode());
                     }
                 }
             });
         }
     }
 
-    @Override protected void onDestroy() {
+    @Override
+    protected void onDestroy() {
         super.onDestroy();
         if (mSubscription != null && !mSubscription.isUnsubscribed()) {
             mSubscription.unsubscribe();
