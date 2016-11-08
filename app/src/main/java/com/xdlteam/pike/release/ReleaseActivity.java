@@ -15,6 +15,7 @@ import com.xdlteam.pike.R;
 import com.xdlteam.pike.base.BaseActivity;
 import com.xdlteam.pike.contract.IReleaseContract;
 import com.xdlteam.pike.location.LocationActivity;
+import com.xdlteam.pike.service.UploadService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,16 +42,18 @@ public class ReleaseActivity extends BaseActivity implements IReleaseContract.IR
     @BindView(R.id.act_release_gv)
     GridView mActReleaseGv;
     private IReleaseContract.IReleasePresenter mPresenter;
-    int progress = 0;
     //普通进度条对话框
     private ProgressDialog dialog;
-
+    private int progress = 0;
+    private UploadService service;// 服务
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_release);
         ButterKnife.bind(this);
         mPresenter = new ReleasePresenterImpl(this);
+        //初始化服务对象
+        service = new UploadService();
         mPresenter.initData();
         mPresenter.setDatas(getDatas());
     }
@@ -125,6 +128,12 @@ public class ReleaseActivity extends BaseActivity implements IReleaseContract.IR
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.unBind();
+    }
+
     @OnClick({R.id.act_release_iv_exit, R.id.act_release_iv_ok, R.id.act_release_btn_location})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -132,7 +141,8 @@ public class ReleaseActivity extends BaseActivity implements IReleaseContract.IR
                 finish();
                 break;
             case R.id.act_release_iv_ok://点击发布
-                mPresenter.release();
+                Intent intent = new Intent(this,UploadService.class);
+                mPresenter.release(intent);
                 break;
             case R.id.act_release_btn_location://点击获取位置信息
                 startActivityForResult(new Intent(this, LocationActivity.class),500);

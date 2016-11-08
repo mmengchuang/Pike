@@ -1,6 +1,7 @@
 package com.xdlteam.pike.application;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.config.Contracts;
@@ -23,6 +24,7 @@ public class MyApplcation extends Application {
 
     public static User sUser;
     private static Map<String,Object> dataMaps;
+    public static Context context;
 
     @Override
     public void onCreate() {
@@ -35,6 +37,7 @@ public class MyApplcation extends Application {
         //Bmob自动更新,这里只用一次
         //BmobUpdateAgent.initAppVersion();
         dataMaps = new HashMap<>();
+        context = getApplicationContext();
     }
 
     /**

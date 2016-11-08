@@ -1,5 +1,6 @@
 package com.xdlteam.pike.contract;
 
+import android.content.Intent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -7,6 +8,7 @@ import android.widget.ImageView;
 
 import com.xdlteam.pike.base.BasePresenter;
 import com.xdlteam.pike.base.BaseView;
+import com.xdlteam.pike.service.UploadService;
 
 /**
  * 契约类、使view 和 Presenter 之前的方法清晰
@@ -62,5 +64,13 @@ public class IReleaseContract {
          * 发布视频
          */
         void release();
+
+        /**
+         * 发布视频
+         * @param myIBinder
+         */
+        void release(UploadService.MyIBinder myIBinder);
+
+        void release(Intent intent);
     }
 }

@@ -46,6 +46,8 @@ public class LocationActivity extends BaseActivity {
      * 百度定位信息对象
      */
     private BDLocation bdLocation;
+    //适配器对象
+    private ArrayAdapter mAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class LocationActivity extends BaseActivity {
         mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
         mLocationClient.registerLocationListener(myListener);    //注册监听函数
         initLocation();
+        initDatas();
         initEvent();
     }
 
@@ -167,22 +170,26 @@ public class LocationActivity extends BaseActivity {
             Log.i("BaiduLocationApiDem", sb.toString());
         }
     }
-
+    private void initDatas() {
+        //初始化数据源
+        locationMsgs = new ArrayList<>();
+        locationMsgs.add("不设置位置");
+        mAdapter  = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,locationMsgs);
+        mActLocationLv.setAdapter(mAdapter);
+    }
     /**
      * 初始化数据
      * @param location 定位信息
      */
     private void initDatas(BDLocation location) {
-        //初始化数据源
-        locationMsgs = new ArrayList<>();
-        locationMsgs.add("不设置位置");
+        //显示定位数据
         List<Poi> list = location.getPoiList();// POI数据
         if (list != null) {
             for (Poi p : list) {
                 locationMsgs.add(p.getName());
             }
-            //设置适配器
-            mActLocationLv.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,locationMsgs));
+            //更新数据
+            mAdapter.notifyDataSetChanged();
         }
         this.bdLocation = location;
     }

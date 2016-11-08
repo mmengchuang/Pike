@@ -50,25 +50,34 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".login.LoginActivity">
+       <!--     <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
+        <activity android:name=".register.RegisterActivity" />
+        <activity android:name=".camera.CameraActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".register.RegisterActivity" />
-        <activity android:name=".camera.CameraActivity" />
         <activity android:name=".home.HomeActivity" />
         <activity android:name=".updateUserMessage.UpdateUserMessageActivity" />
         <activity android:name=".location.LocationActivity" />
         <activity android:name=".release.ReleaseActivity" />
         <activity android:name=".personage.PersonageActivity" />
-        <!-- 百度定位 -->
+        <!-- 百度定位服务-->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote"></service>
-
+        <!--文件上传服务-->
+        <service android:name=".service.UploadService">
+        </service>
+        <!--百度定位Key-->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="kp3VlI5eAdZ8VN2Fz84h9lmVi0WVeDTq" />

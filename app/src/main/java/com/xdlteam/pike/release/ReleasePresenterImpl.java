@@ -1,6 +1,12 @@
 package com.xdlteam.pike.release;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.os.IBinder;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -10,6 +16,7 @@ import com.baidu.location.BDLocation;
 import com.xdlteam.pike.application.MyApplcation;
 import com.xdlteam.pike.bean.Video;
 import com.xdlteam.pike.contract.IReleaseContract;
+import com.xdlteam.pike.service.UploadService;
 import com.xdlteam.pike.util.LogUtils;
 import com.xdlteam.pike.util.VideoUtils;
 
@@ -25,6 +32,8 @@ import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadBatchListener;
+
+import static com.xdlteam.pike.application.MyApplcation.context;
 
 /**
  * 发布页面的处理类
@@ -46,7 +55,9 @@ public class ReleasePresenterImpl implements IReleaseContract.IReleasePresenter 
     private Bitmap mBitmap;
     private String mVideoURL = "";
     //进度条
-    private int progress = 0;
+    private UploadService.MyIBinder myIBinder;//服务内部类对象
+    private ServiceConnection conn;// 服务连接对象
+
 
     public ReleasePresenterImpl(IReleaseContract.IReleaseView mReleaseView) {
         this.mReleaseView = mReleaseView;
@@ -59,6 +70,7 @@ public class ReleasePresenterImpl implements IReleaseContract.IReleasePresenter 
         mGridView = mReleaseView.getmActReleaseGv();
         mEtDisc = mReleaseView.getmActReleaseEtContent();
         mBtn = mReleaseView.getmActReleaseBtnLocation();
+
     }
 
     @Override
@@ -75,7 +87,7 @@ public class ReleasePresenterImpl implements IReleaseContract.IReleasePresenter 
     public void release() {
         LogUtils.i("myTag", "点击发布按钮!");
         //显示普通进度条
-        mReleaseView.showLoadingDialog();
+//        mReleaseView.showLoadingDialog();
         //获取第一帧图片的文件
         File imgFile = saveBitmapFile(mBitmap);
         //获取第一帧图片的路径
@@ -83,6 +95,7 @@ public class ReleasePresenterImpl implements IReleaseContract.IReleasePresenter 
         LogUtils.i("myTag", "我获取到的文件路径" + filePathImg);
         //获取视频的路径
         String filePathVideo = mVideoURL;
+        LogUtils.i("myTag", "我获取取到为视频路径" + mVideoURL);
         final String[] filePaths = new String[2];
         filePaths[0] = filePathImg;
         filePaths[1] = filePathVideo;
@@ -114,6 +127,49 @@ public class ReleasePresenterImpl implements IReleaseContract.IReleasePresenter 
                         ",总的上传文件数 " + total + "总的上传进度 " + totalPercent);
             }
         });
+    }
+
+    @Override
+    public void release(UploadService.MyIBinder myIBinder) {
+        myIBinder.uploadFiles("123456", "7892222");
+    }
+
+    //2016.11.7修改 改用服务后台上传文件
+    @Override
+    public void release(Intent intent) {
+        File imgFile = saveBitmapFile(mBitmap);
+        //获取第一帧图片的路径
+        final String filePathImg = imgFile.getPath();
+        LogUtils.i("myTag", "我获取到的文件路径" + filePathImg);
+        //获取视频的路径
+        final String filePathVideo = mVideoURL;
+        LogUtils.i("myTag", "我获取取到为视频路径" + mVideoURL);
+        //视频描述
+        final String strDesc = mEtDisc.getText().toString().trim();
+        //视频语义化地址
+        final String strLocation = mBtn.getText().toString().trim();
+        //初始化服务连接对象
+        conn = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                Log.i("myTag", "连接服务成功");
+                //初始化IBinder对象
+                myIBinder = (UploadService.MyIBinder) iBinder;
+                //上传文件
+                myIBinder.uploadFiles(filePathImg, filePathVideo,strDesc,strLocation);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+                Log.i("myTag", "连接服务失败");
+            }
+        };
+        //绑定服务
+        context.bindService(intent, conn, Context.BIND_AUTO_CREATE);
+        //启动服务
+        context.startService(intent);
+        //结束掉自己
+        mReleaseView.jumpActivity();
     }
 
     /**
@@ -163,7 +219,8 @@ public class ReleasePresenterImpl implements IReleaseContract.IReleasePresenter 
 
     @Override
     public void unBind() {
-
+        //解绑服务
+        MyApplcation.context.unbindService(conn);
     }
 
     /**
@@ -190,4 +247,5 @@ public class ReleasePresenterImpl implements IReleaseContract.IReleasePresenter 
         }
         return file;
     }
+
 }
