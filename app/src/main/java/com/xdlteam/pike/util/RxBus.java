@@ -17,7 +17,7 @@ public class RxBus {
   private final Subject<Object, Object> bus;
   // PublishSubject只会把在订阅发生的时间点之后来自原始Observable的数据发射给观察者
   public RxBus() {
-    bus = new SerializedSubject<>(AsyncSubject.create());
+    bus = new SerializedSubject<>(BehaviorSubject.create());
   }
   // 单例RxBus
   public static RxBus getDefault() {
