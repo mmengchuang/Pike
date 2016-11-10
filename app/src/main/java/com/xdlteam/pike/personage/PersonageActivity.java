@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import rx.subscriptions.CompositeSubscription;
 
-public class PersonageActivity extends AppCompatActivity {
+public class  PersonageActivity extends AppCompatActivity {
 
 	@BindView(R.id.act_personage_userimage)
 	CircleImageView mActPersonageUserimage;

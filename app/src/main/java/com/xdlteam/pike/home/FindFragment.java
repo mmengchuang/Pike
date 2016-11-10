@@ -3,7 +3,6 @@ package com.xdlteam.pike.home;
 import android.content.Intent;
 import android.databinding.ObservableArrayList;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -26,17 +25,11 @@ import com.xdlteam.pike.viewmodel.VideoModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Vector;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**

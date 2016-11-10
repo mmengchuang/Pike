@@ -21,6 +21,7 @@ import com.xdlteam.pike.widget.RecoderProgress;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+
 /**
  * Created by 11655 on 2016/11/3.
  */
@@ -122,6 +123,11 @@ public class CameraFrament extends BaseFragment implements IFragCameraContract.I
     @Override
     public RecoderProgress getmActCameraPb() {
         return mActCameraPb;
+    }
+
+    @Override
+    public void jumpActivity() {
+        getActivity().finish();
     }
 
     @OnClick({R.id.act_camera_iv_exit,R.id.act_camera_iv_light,R.id.act_camera_iv_change, R.id.act_camera_iv_music, R.id.act_camera_iv_del, R.id.act_camera_iv_start, R.id.act_camera_iv_ok})

@@ -30,6 +30,11 @@ public class IFragCameraContract {
          * @return 进度条控件对象
          */
         RecoderProgress getmActCameraPb();
+
+        /**
+         * Activity的跳转
+         */
+        void jumpActivity();
     }
 
     public interface IFragCameraPresenter {

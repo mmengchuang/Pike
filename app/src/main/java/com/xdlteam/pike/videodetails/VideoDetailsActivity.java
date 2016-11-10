@@ -12,7 +12,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,7 +45,7 @@ import io.vov.vitamio.widget.VideoView;
 import rx.Subscription;
 import rx.functions.Action1;
 
-public class VideoDetailsActivity extends Activity implements IVideoContract.IVideoView{
+public class VideoDetailsActivity extends Activity implements IVideoContract.IVideoView {
 
     @BindView(R.id.activity_video_details_iv_back)
     ImageView mIvBack;
@@ -63,8 +65,12 @@ public class VideoDetailsActivity extends Activity implements IVideoContract.IVi
     TextView mTvPinglun;
     @BindView(R.id.activity_video_details_lv)
     ListView mLv;
-    @BindView(R.id.surface_view)
-    VideoView mSurfaceView;
+    @BindView(R.id.activity_main)
+    RelativeLayout mActivityMain;
+    @BindView(R.id.activity_video_details)
+    LinearLayout mActivityVideoDetails;
+        @BindView(R.id.surface_view)
+        VideoView mSurfaceView;
     private Subscription mSubscription;
 
     private Video mVideo;
@@ -106,35 +112,34 @@ public class VideoDetailsActivity extends Activity implements IVideoContract.IVi
 //                        Toast.makeText(VideoDetailsActivity.this, mVideo.getObjectId(), Toast.LENGTH_SHORT).show();
                     }
                 });
-        Log.i("MyTag",mVideo.getUserId()+"userid");
+        Log.i("MyTag", mVideo.getUserId() + "userid");
 
         //播放视频
         mVideoPresenter.playfunction(mVideo.getVideo_content().getUrl());
-
-        BmobQuery<User> query=new BmobQuery<>();
+        BmobQuery<User> query = new BmobQuery<>();
         query.getObject(mVideo.getUserId(), new QueryListener<User>() {
             @Override
             public void done(User user, BmobException e) {
-                if(e==null){
-                    mVideoUser=user;
-                    Log.i("MyTag","查询成功");
+                if (e == null) {
+                    mVideoUser = user;
+                    Log.i("MyTag", "查询成功");
                     mTvUserNick.setText(mVideoUser.getUserNick());
                     Picasso.with(VideoDetailsActivity.this).load(mVideoUser.getUserHeadPortrait().getFileUrl()).into(mIvTouxiang);
-                }else {
-                    Log.i("MyTag",e.getLocalizedMessage());
+                } else {
+                    Log.i("MyTag", e.getLocalizedMessage());
                 }
             }
         });
-        mTvLike.setText(mVideo.getLoveCount()+"");
-        if(MyApplcation.sUser.getUserGuanZhu().contains(mVideo.getUserId())){
+        mTvLike.setText(mVideo.getLoveCount() + "");
+        if (MyApplcation.sUser.getUserGuanZhu().contains(mVideo.getUserId())) {
             mIvAdd.setVisibility(View.GONE);
-        }else {
+        } else {
             mIvAdd.setVisibility(View.VISIBLE);
         }
 
-        if(MyApplcation.sUser.getUserShouCang().contains(mVideo.getObjectId())){
+        if (MyApplcation.sUser.getUserShouCang().contains(mVideo.getObjectId())) {
             mIvXin.setImageResource(R.drawable.act_videodetails_xinhong);
-        }else {
+        } else {
             mIvXin.setImageResource(R.drawable.act_videodetails_xinhei);
         }
 
@@ -151,9 +156,9 @@ public class VideoDetailsActivity extends Activity implements IVideoContract.IVi
             @Override
             public void onClick(View view) {
                 mIvAdd.setVisibility(View.GONE);
-                HolderFollow hf=new HolderFollow();
-                hf.userId=MyApplcation.sUser.getObjectId();
-                hf.videoUserId=mVideo.getUserId();
+                HolderFollow hf = new HolderFollow();
+                hf.userId = MyApplcation.sUser.getObjectId();
+                hf.videoUserId = mVideo.getUserId();
                 userFollow(hf);
             }
         });
@@ -163,15 +168,15 @@ public class VideoDetailsActivity extends Activity implements IVideoContract.IVi
         mIvXin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                HolderCollection hc=new HolderCollection();
-                hc.user=MyApplcation.sUser;
-                hc.video=mVideo;
-                if(MyApplcation.sUser.getUserShouCang().contains(mVideo.getObjectId())){
+                HolderCollection hc = new HolderCollection();
+                hc.user = MyApplcation.sUser;
+                hc.video = mVideo;
+                if (MyApplcation.sUser.getUserShouCang().contains(mVideo.getObjectId())) {
                     mIvXin.setImageResource(R.drawable.act_videodetails_xinhei);
-                    hc.flag=false;
-                }else {
+                    hc.flag = false;
+                } else {
                     mIvXin.setImageResource(R.drawable.act_videodetails_xinhong);
-                    hc.flag=true;
+                    hc.flag = true;
                 }
                 userCollection(hc);
             }
@@ -365,7 +370,7 @@ public class VideoDetailsActivity extends Activity implements IVideoContract.IVi
             holder.video.setLoveCount(count);
             Video video = new Video();
             video.setLoveCount(count);
-            mTvLike.setText(count+"");
+            mTvLike.setText(count + "");
             video.update(holder.video.getObjectId(), new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
@@ -404,7 +409,7 @@ public class VideoDetailsActivity extends Activity implements IVideoContract.IVi
             holder.video.setLoveCount(count);
             Video video = new Video();
             video.setLoveCount(count);
-            mTvLike.setText(count+"");
+            mTvLike.setText(count + "");
             video.update(holder.video.getObjectId(), new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
