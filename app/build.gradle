@@ -51,8 +51,8 @@ dependencies {
     //图片加载框架
     compile 'com.squareup.picasso:picasso:2.5.2'
     /*    compile 'io.reactivex:rxandroid:1.1.0'
-                //RxJava
-                compile 'io.reactivex:rxjava:1.1.0'*/
+                    //RxJava
+                    compile 'io.reactivex:rxjava:1.1.0'*/
     //Dagger2
     compile 'com.google.dagger:dagger:2.0.2'
     apt 'com.google.dagger:dagger-compiler:2.0.2'
@@ -64,5 +64,4 @@ dependencies {
     compile 'com.github.nitrico.lastadapter:lastadapter:1.2.4'
     compile project(':vitamio')
     compile 'com.google.code.gson:gson:2.2.4'
-    compile files('libs/vcameralibrary.jar')
 }
