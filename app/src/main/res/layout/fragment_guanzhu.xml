@@ -5,6 +5,7 @@
     >
 
     <LinearLayout
+        android:id="@+id/fragment_guanzhu_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -56,4 +57,14 @@
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"/>
     </LinearLayout>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fragment_guanzhu_srl">
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_guanzhu_rv">
+        </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </FrameLayout>

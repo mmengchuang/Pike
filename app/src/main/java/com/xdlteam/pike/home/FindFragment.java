@@ -47,6 +47,12 @@ public class FindFragment extends Fragment implements LastAdapter.OnClickListene
 	private VideoModel mModel;
 	private ObservableArrayList<Video> mVideos;
 
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
+	}
+
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -67,9 +73,8 @@ public class FindFragment extends Fragment implements LastAdapter.OnClickListene
 		mFragmentFindRecyclerview.setLayoutManager(gridLayoutManager);
 
 		mSwipeRefreshLayout.setRefreshing(true);
-		mFragmentFindRecyclerview.setVisibility(View.INVISIBLE);
+		mFragmentFindRecyclerview.setVisibility(View.GONE);
 		setVideos();
-		mFragmentFindRecyclerview.setVisibility(View.VISIBLE);
 
 		LastAdapter.with(mVideos, BR.item)
 				.map(Video.class, R.layout.fragment_find_item)
@@ -110,14 +115,13 @@ public class FindFragment extends Fragment implements LastAdapter.OnClickListene
 	}
 
 	private void setVideos() {
-		mSwipeRefreshLayout.setEnabled(false);
 		mSubscription.add(mModel.getVideos(0)
 				.subscribe(new Observer<List<Video>>() {
 					@Override
 					public void onCompleted() {
 						mSwipeRefreshLayout.setRefreshing(false);
+						mFragmentFindRecyclerview.setVisibility(View.VISIBLE);
 						Log.d(TAG, "onCompleted: 视频加载完成");
-						mSwipeRefreshLayout.setEnabled(true);
 					}
 
 					@Override
