@@ -3,6 +3,7 @@ package com.xdlteam.pike.viewmodel;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.bean.Video;
 
+import java.util.Date;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
@@ -10,6 +11,7 @@ import cn.bmob.v3.BmobUser;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 /**
@@ -97,7 +99,16 @@ public class UserModel {
 						return Observable.from(videos);
 					}
 				})
-				.toList()
+				.toSortedList(new Func2<Video, Video, Integer>() {
+					@Override
+					public Integer call(Video video, Video video2) {
+						if (new Date(video.getCreatedAt()).after(new Date(video2.getCreatedAt()))) {
+							return 1;
+						} else {
+							return 0;
+						}
+					}
+				})
 				.observeOn(AndroidSchedulers.mainThread());
 	}
 
