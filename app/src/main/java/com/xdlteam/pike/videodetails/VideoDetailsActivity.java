@@ -12,10 +12,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.modelmsg.WXTextObject;
@@ -25,20 +28,24 @@ import com.xdlteam.pike.R;
 import com.xdlteam.pike.application.MyApplcation;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.bean.Video;
+import com.xdlteam.pike.contract.IVideoContract;
 import com.xdlteam.pike.util.RxBus;
+import com.xdlteam.pike.video.VideoPlayPresenterImpl;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.UpdateListener;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.vov.vitamio.widget.VideoView;
 import rx.Subscription;
 import rx.functions.Action1;
 
-public class VideoDetailsActivity extends Activity {
+public class VideoDetailsActivity extends Activity implements IVideoContract.IVideoView {
 
     @BindView(R.id.activity_video_details_iv_back)
     ImageView mIvBack;
@@ -58,12 +65,19 @@ public class VideoDetailsActivity extends Activity {
     TextView mTvPinglun;
     @BindView(R.id.activity_video_details_lv)
     ListView mLv;
+    @BindView(R.id.activity_main)
+    RelativeLayout mActivityMain;
+    @BindView(R.id.activity_video_details)
+    LinearLayout mActivityVideoDetails;
     @BindView(R.id.surface_view)
     VideoView mSurfaceView;
     private Subscription mSubscription;
 
-
     private Video mVideo;
+
+    private User mVideoUser;
+
+    private VideoPlayPresenterImpl mVideoPresenter;
 
 
     //微信APP_ID
@@ -82,6 +96,8 @@ public class VideoDetailsActivity extends Activity {
         setContentView(R.layout.activity_video_details);
         regToWx();
         ButterKnife.bind(this);
+        mVideoPresenter = new VideoPlayPresenterImpl(this);
+        mVideoPresenter.initData();
         initDatas();
         initViewOpers();
     }
@@ -93,9 +109,42 @@ public class VideoDetailsActivity extends Activity {
                     @Override
                     public void call(Video video) {
                         mVideo = video;
-                        Toast.makeText(VideoDetailsActivity.this, mVideo.getObjectId(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(VideoDetailsActivity.this, mVideo.getObjectId(), Toast.LENGTH_SHORT).show();
                     }
                 });
+        Log.i("MyTag", mVideo.getUserId() + "userid");
+
+        //播放视频
+        mVideoPresenter.playfunction(mVideo.getVideo_content().getUrl());
+        //根据当前的视频Id获取当前视频的评论内容
+        mVideoPresenter.queryDiscuss(mVideo.getObjectId());
+        //获取当前视频的用户信息
+        BmobQuery<User> query = new BmobQuery<>();
+        query.getObject(mVideo.getUserId(), new QueryListener<User>() {
+            @Override
+            public void done(User user, BmobException e) {
+                if (e == null) {
+                    mVideoUser = user;
+                    Log.i("MyTag", "查询成功");
+                    mTvUserNick.setText(mVideoUser.getUserNick());
+                    Picasso.with(VideoDetailsActivity.this).load(mVideoUser.getUserHeadPortrait().getFileUrl()).into(mIvTouxiang);
+                } else {
+                    Log.i("MyTag", e.getLocalizedMessage());
+                }
+            }
+        });
+        mTvLike.setText(mVideo.getLoveCount() + "");
+        if (MyApplcation.sUser.getUserGuanZhu().contains(mVideo.getUserId())) {
+            mIvAdd.setVisibility(View.GONE);
+        } else {
+            mIvAdd.setVisibility(View.VISIBLE);
+        }
+
+        if (MyApplcation.sUser.getUserShouCang().contains(mVideo.getObjectId())) {
+            mIvXin.setImageResource(R.drawable.act_videodetails_xinhong);
+        } else {
+            mIvXin.setImageResource(R.drawable.act_videodetails_xinhei);
+        }
 
     }
 
@@ -109,8 +158,11 @@ public class VideoDetailsActivity extends Activity {
         mIvAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                mIvAdd.setVisibility(View.GOE);
-
+                mIvAdd.setVisibility(View.GONE);
+                HolderFollow hf = new HolderFollow();
+                hf.userId = MyApplcation.sUser.getObjectId();
+                hf.videoUserId = mVideo.getUserId();
+                userFollow(hf);
             }
         });
         /**
@@ -119,6 +171,17 @@ public class VideoDetailsActivity extends Activity {
         mIvXin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                HolderCollection hc = new HolderCollection();
+                hc.user = MyApplcation.sUser;
+                hc.video = mVideo;
+                if (MyApplcation.sUser.getUserShouCang().contains(mVideo.getObjectId())) {
+                    mIvXin.setImageResource(R.drawable.act_videodetails_xinhei);
+                    hc.flag = false;
+                } else {
+                    mIvXin.setImageResource(R.drawable.act_videodetails_xinhong);
+                    hc.flag = true;
+                }
+                userCollection(hc);
             }
         });
         /**
@@ -135,7 +198,7 @@ public class VideoDetailsActivity extends Activity {
 
 
     /**
-     * 自定义提示框，用来选择性别
+     * 自定义提示框，用来选择分享位置
      */
     private void showShareDialog() {
         //获取自定义提示框的布局
@@ -227,6 +290,20 @@ public class VideoDetailsActivity extends Activity {
 //        api.sendReq(req);
     }
 
+    @Override
+    public VideoView getVideoView() {
+        return mSurfaceView;
+    }
+
+    @Override
+    public ListView getmLv() {
+        return mLv;
+    }
+    @Override
+    public Video getmVideo() {
+        return mVideo;
+    }
+
     /**
      * 关注相关内部类
      */
@@ -244,6 +321,7 @@ public class VideoDetailsActivity extends Activity {
         User user = new User();
         ArrayList<String> als = MyApplcation.sUser.getUserGuanZhu();
         als.add(holder.videoUserId);
+        MyApplcation.sUser.setUserGuanZhu(als);
         user.setUserGuanZhu(als);
         user.update(holder.userId, new UpdateListener() {
             @Override
@@ -283,7 +361,8 @@ public class VideoDetailsActivity extends Activity {
             User user = new User();
             ArrayList<String> als = MyApplcation.sUser.getUserShouCang();
             als.add(holder.video.getObjectId());
-            user.setUserGuanZhu(als);
+            MyApplcation.sUser.setUserShouCang(als);
+            user.setUserShouCang(als);
             user.update(holder.user.getObjectId(), new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
@@ -300,8 +379,10 @@ public class VideoDetailsActivity extends Activity {
              * 将当前视频收藏人数加一
              */
             int count = holder.video.getLoveCount() + 1;
+            holder.video.setLoveCount(count);
             Video video = new Video();
             video.setLoveCount(count);
+            mTvLike.setText(count + "");
             video.update(holder.video.getObjectId(), new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
@@ -320,7 +401,8 @@ public class VideoDetailsActivity extends Activity {
             User user = new User();
             ArrayList<String> als = MyApplcation.sUser.getUserShouCang();
             als.remove(holder.video.getObjectId());
-            user.setUserGuanZhu(als);
+            MyApplcation.sUser.setUserShouCang(als);
+            user.setUserShouCang(als);
             user.update(holder.user.getObjectId(), new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
@@ -336,8 +418,10 @@ public class VideoDetailsActivity extends Activity {
              * 将当前视频收藏人数减一
              */
             int count = holder.video.getLoveCount() - 1;
+            holder.video.setLoveCount(count);
             Video video = new Video();
             video.setLoveCount(count);
+            mTvLike.setText(count + "");
             video.update(holder.video.getObjectId(), new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
@@ -358,6 +442,12 @@ public class VideoDetailsActivity extends Activity {
         if (mSubscription != null && !mSubscription.isUnsubscribed()) {
             mSubscription.unsubscribe();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        finish();
     }
 }
 

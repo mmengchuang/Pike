@@ -25,6 +25,7 @@ public class MyApplcation extends Application {
     public static User sUser;
     private static Map<String,Object> dataMaps;
     public static Context context;
+    private static MyApplcation application;
 
     @Override
     public void onCreate() {
@@ -61,5 +62,7 @@ public class MyApplcation extends Application {
         }
         return dataMaps.get(key);
     }
-
+    public static Context getContext() {
+        return application;
+    }
 }
