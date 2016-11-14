@@ -3,7 +3,6 @@ package com.xdlteam.pike.viewmodel;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.bean.Video;
 
-import java.util.Date;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
@@ -11,7 +10,6 @@ import cn.bmob.v3.BmobUser;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
-import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 /**
@@ -76,8 +74,8 @@ public class UserModel {
 	 * @param list
 	 * @return
 	 */
-	public Observable<List<Video>> getGuanZhu(List<String> list) {
-		return Observable.from(list)
+	public Observable<List<Video>> getGuanZhu(final List<String> list) {
+		/*return Observable.from(list)
 				.flatMap(new Func1<String, Observable<User>>() {
 					@Override
 					public Observable<User> call(String s) {
@@ -99,17 +97,24 @@ public class UserModel {
 						return Observable.from(videos);
 					}
 				})
-				.toSortedList(new Func2<Video, Video, Integer>() {
+				.toList()
+				.observeOn(AndroidSchedulers.mainThread());*/
+		BmobQuery<Video> query = new BmobQuery<>();
+		query.order("-createdAt");
+		return query.findObjectsObservable(Video.class)
+				.concatMap(new Func1<List<Video>, Observable<Video>>() {
 					@Override
-					public Integer call(Video video, Video video2) {
-						if (new Date(video.getCreatedAt()).after(new Date(video2.getCreatedAt()))) {
-							return 1;
-						} else {
-							return 0;
-						}
+					public Observable<Video> call(List<Video> videos) {
+						return Observable.from(videos);
 					}
 				})
-				.observeOn(AndroidSchedulers.mainThread());
+				.filter(new Func1<Video, Boolean>() {
+					@Override
+					public Boolean call(Video video) {
+						return list.contains(video.getUserId());
+					}
+				})
+				.toList();
 	}
 
 	public Observable<List<Video>> getAllVideos() {

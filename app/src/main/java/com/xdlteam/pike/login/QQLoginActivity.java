@@ -1,7 +1,7 @@
 package com.xdlteam.pike.login;
 
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.tencent.tauth.IUiListener;
@@ -20,7 +20,7 @@ public class QQLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qqlogin);
-//        mTencent = Tencent.createInstance("101359231", this.getApplicationContext());
+        mTencent = Tencent.createInstance("101359231", this.getApplicationContext());
         initViews();
         login();
     }
@@ -39,26 +39,30 @@ public class QQLoginActivity extends AppCompatActivity {
 //            mMessageText.setText(response.toString());
             JSONObject json=(JSONObject)response;
             doComplete(json);
-            Log.i("MyTag",json+"");
 
         }
 
         protected void doComplete(JSONObject values) {
+
         }
+
+
+
         @Override
 
         public void onError(UiError e) {
 
-            Log.i("MyTag", "code:" + e.errorCode + ", msg:"
+            Log.i("myTag", "code:" + e.errorCode + ", msg:"
 
                     + e.errorMessage + ", detail:" + e.errorDetail);
+
         }
 
         @Override
 
         public void onCancel() {
 
-            Log.i("MyTag", "onCancel");
+            Log.i("myTag", "onCancel");
 
         }
     }
@@ -69,7 +73,6 @@ public class QQLoginActivity extends AppCompatActivity {
         if (!mTencent.isSessionValid())
         {
             mTencent.login(this, SCOPE, new BaseUiListener());
-//            startActivity(new Intent(this, HomeActivity.class));
         }
     }
 }

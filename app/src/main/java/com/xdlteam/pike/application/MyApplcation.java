@@ -23,7 +23,7 @@ public class MyApplcation extends Application {
 
 
     public static User sUser;
-    private static Map<String, Object> dataMaps;
+    private static Map<String,Object> dataMaps;
     public static Context context;
 
     @Override
@@ -42,22 +42,20 @@ public class MyApplcation extends Application {
 
     /**
      * 保存信息
-     *
      * @param key
      * @param values
      */
-    public static void putDatas(String key, Object values) {
-        dataMaps.put(key, values);
+    public static void putDatas(String key,Object values ) {
+        dataMaps.put(key,values);
     }
 
     /**
      * 获取数据
-     *
      * @param key
      * @param flag
      * @return
      */
-    public static Object getDatas(String key, boolean flag) {
+    public static Object getDatas(String key,boolean flag){
         if (flag) {
             return dataMaps.remove(key);
         }

@@ -1,5 +1,6 @@
 package com.xdlteam.pike.home;
 
+import android.content.Intent;
 import android.databinding.ObservableArrayList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,6 +19,8 @@ import com.xdlteam.pike.BR;
 import com.xdlteam.pike.R;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.bean.Video;
+import com.xdlteam.pike.util.RxBus;
+import com.xdlteam.pike.videodetails.VideoDetailsActivity;
 import com.xdlteam.pike.viewmodel.UserModel;
 
 import java.util.List;
@@ -122,7 +125,9 @@ public class OneFragment extends Fragment implements LastAdapter.OnClickListener
 
 	@Override
 	public void onClick(Object o, View view, int i, int i1) {
-
+		Intent intent=new Intent(getContext(), VideoDetailsActivity.class);
+		RxBus.getDefault().post((Video)o);
+		startActivity(intent);
 	}
 
 	@Override

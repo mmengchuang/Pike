@@ -10,6 +10,7 @@
         <variable
             name="item"
             type="com.xdlteam.pike.bean.Video"/>
+
         <variable
             name="random"
             type="java.util.Random"/>
@@ -34,13 +35,13 @@
                 android:layout_height="240dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_user_image_test"
+                app:imageUrl="@{item.video_image.fileUrl}"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:layout_constraintLeft_creator="1"
                 tools:layout_constraintRight_creator="1"
-                tools:layout_constraintTop_creator="1"
-                app:imageUrl="@{item.video_image.fileUrl}"/>
+                tools:layout_constraintTop_creator="1"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/find_item_user_icon"
@@ -48,13 +49,13 @@
                 android:layout_height="36dp"
                 android:layout_marginStart="24dp"
                 android:src="@drawable/ic_user_image_test"
+                app:imageVideo="@{item.userId}"
                 app:layout_constraintBottom_toBottomOf="@+id/find_item_video_image"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/find_item_video_image"
                 tools:layout_constraintBottom_creator="1"
                 tools:layout_constraintLeft_creator="1"
                 tools:layout_constraintTop_creator="1"
-                app:imageVideo="@{item.userId}"
                 />
 
             <ImageView
@@ -75,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:text="2333"
+                app:shouCang="@{item.loveCount}"
                 app:layout_constraintBottom_toBottomOf="@+id/find_item_heart"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/find_item_heart"/>

@@ -22,5 +22,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         unBind();
     }
 
+
+    //解绑view
     protected abstract void unBind();
 }

@@ -23,6 +23,8 @@ import com.xdlteam.pike.BR;
 import com.xdlteam.pike.R;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.bean.Video;
+import com.xdlteam.pike.util.RxBus;
+import com.xdlteam.pike.videodetails.VideoDetailsActivity;
 import com.xdlteam.pike.viewmodel.UserModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -35,6 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -79,6 +82,7 @@ public class PersonageActivity extends AppCompatActivity implements LastAdapter.
 	private Random mRandom;
 	private ObservableArrayList<Video> mVideos;
 	private CompositeSubscription mSubscription;
+	private Observable<List<Video>> mZhuoPingObservable;
 	private final static String TAG = PersonageActivity.class.getSimpleName();
 
 	public static Intent newIntent(Context context) {
@@ -95,9 +99,30 @@ public class PersonageActivity extends AppCompatActivity implements LastAdapter.
 		mUser = mUserModel.getUser();
 		mVideos = new ObservableArrayList<>();
 
+		mZhuoPingObservable=mUserModel.getVideos(mUser.getObjectId());//请求作品的流
 		//设置用户拥有的视频列表不可见
 		mActPersonageRecyclerview.setVisibility(View.GONE);
 		mActPersonageFrameLayoutIv.setVisibility(View.GONE);
+
+		mZhuoPingObservable
+				.count()
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Subscriber<Integer>() {
+					@Override
+					public void onCompleted() {
+						Log.d(TAG, "用户作品完成加载");
+					}
+
+					@Override
+					public void onError(Throwable throwable) {
+						Snackbar.make(mActPersonageUserimage,throwable.getMessage(),Snackbar.LENGTH_SHORT);
+					}
+
+					@Override
+					public void onNext(Integer integer) {
+						mActPersonageZuopinCount.setText(integer+"");
+					}
+				});
 
 		GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
 		layoutManager.setSmoothScrollbarEnabled(true);
@@ -136,7 +161,7 @@ public class PersonageActivity extends AppCompatActivity implements LastAdapter.
 
 						@Override
 						public void onError(Throwable throwable) {
-							Log.d(TAG, "onError:"+throwable.getMessage());
+							Log.d(TAG, "onError:" + throwable.getMessage());
 						}
 
 						@Override
@@ -258,14 +283,16 @@ public class PersonageActivity extends AppCompatActivity implements LastAdapter.
 
 	@Override
 	public void onClick(@NotNull Object o, @NotNull View view, int i, int i1) {
-
+		Intent intent=new Intent(this, VideoDetailsActivity.class);
+		RxBus.getDefault().post((Video)o);
+		startActivity(intent);
 	}
 
 	@OnClick(value = {R.id.activity_personage_zhuopin, R.id.activity_personage_xihuan})
 	public void myOnClick(View view) {
 		switch (view.getId()) {
 			case R.id.activity_personage_zhuopin:
-				mSubscription.add(mUserModel.getVideos(mUser.getObjectId())
+				mSubscription.add(mZhuoPingObservable
 						.subscribeOn(Schedulers.io())
 						.observeOn(AndroidSchedulers.mainThread())
 						.subscribe(subscriberVideo()));

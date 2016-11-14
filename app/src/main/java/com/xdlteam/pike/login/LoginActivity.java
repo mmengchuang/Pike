@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.xdlteam.pike.R;
-import com.xdlteam.pike.application.MyApplcation;
 import com.xdlteam.pike.base.BaseActivity;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.home.HomeActivity;
@@ -72,7 +71,6 @@ public class LoginActivity extends BaseActivity {
                 }
                 Intent intent = HomeActivity.newIntent(LoginActivity.this);
                 startActivity(intent);
-                MyApplcation.sUser=user;
                 Toast.makeText(LoginActivity.this,"登录成功",Toast.LENGTH_SHORT).show();
                 LoginActivity.this.finish();
 //                if(user!=null){

@@ -107,7 +107,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/updateusermessage_tv"
                 android:gravity="center"
-                android:text="昵  称:"
+                android:text="昵       称:"
                 android:textSize="18sp" />
 
             <EditText
@@ -149,7 +149,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/updateusermessage_tv"
                 android:gravity="center"
-                android:text="性  别:"
+                android:text="性       别:"
                 android:textSize="18sp" />
 
             <TextView

@@ -2,11 +2,11 @@ package com.xdlteam.pike.viewmodel;
 
 import android.databinding.BindingAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.bean.Video;
-import com.xdlteam.pike.util.UserQueryPool;
 
 import java.util.List;
 
@@ -55,4 +55,8 @@ public class VideoModel {
 				});
 	}
 
+	@BindingAdapter("shouCang")
+	public static void shouCang(TextView textView, int loveCount) {
+		textView.setText(loveCount+"");
+	}
 }
