@@ -4,9 +4,9 @@ import android.widget.ListView;
 
 import com.xdlteam.pike.application.MyApplcation;
 import com.xdlteam.pike.bean.Discuss;
-import com.xdlteam.pike.bean.Video;
 import com.xdlteam.pike.contract.IVideoContract;
 import com.xdlteam.pike.util.LogUtils;
+import com.yixia.camera.demo.log.Logger;
 
 import java.util.List;
 
@@ -32,7 +32,8 @@ public class VideoPlayPresenterImpl implements IVideoContract.IVideoPresenter {
     //视频控制器对象
     private MediaController controller;
     private ListView mXlvPl;
-    private Video mVideoBean;
+    /** 是否需要自动恢复播放，用于自动暂停，恢复播放 */
+    private boolean needResume;
 
     public VideoPlayPresenterImpl(IVideoContract.IVideoView mView) {
         this.mView = mView;
@@ -43,8 +44,6 @@ public class VideoPlayPresenterImpl implements IVideoContract.IVideoPresenter {
         //获取控件
         mVideoView = mView.getVideoView();
         mXlvPl  = mView.getmLv();
-        //获取当前选中的视频对象
-        mVideoBean = mView.getmVideo();
         //设置控制器
         controller = new MediaController(MyApplcation.context);
         mVideoView.setMediaController(controller);
@@ -61,11 +60,36 @@ public class VideoPlayPresenterImpl implements IVideoContract.IVideoPresenter {
         mVideoView.requestFocus();//取得焦点
         mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
+            public void onPrepared(final MediaPlayer mediaPlayer) {
                 // optional need Vitamio 4.0
                 mediaPlayer.setPlaybackSpeed(1.0f);
                 //设置视频缓存区
                 mediaPlayer.setBufferSize(512 * 1024);
+                mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+                    @Override
+                    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+
+                        switch (what) {
+                            case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+                                //开始缓存，暂停播放
+                                if (mVideoView.isPlaying()) {//如果当前正在播放,则先停止播放
+                                    mediaPlayer.stop();
+                                    needResume = true;
+                                }
+                                break;
+                            case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+                                //缓存完成，继续播放
+                                if (needResume)
+                                    mediaPlayer.start();
+                                break;
+                            case MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
+                                //显示 下载速度
+                                Logger.e("download rate:" + extra);
+                                break;
+                        }
+                        return true;
+                    }
+                });
             }
         });
     }
