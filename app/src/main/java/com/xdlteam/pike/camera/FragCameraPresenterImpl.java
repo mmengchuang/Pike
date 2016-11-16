@@ -1,8 +1,10 @@
 package com.xdlteam.pike.camera;
 
+import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -11,10 +13,17 @@ import android.view.SurfaceView;
 import com.xdlteam.pike.contract.IFragCameraContract;
 import com.xdlteam.pike.util.LogUtils;
 import com.xdlteam.pike.widget.RecoderProgress;
+import com.yixia.weibo.sdk.util.DeviceUtils;
+import com.yixia.weibo.sdk.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
+
+import static com.yixia.weibo.sdk.MediaRecorderBase.MAX_FRAME_RATE;
+import static com.yixia.weibo.sdk.MediaRecorderBase.MIN_FRAME_RATE;
 
 /**
  * Created by 11655 on 2016/11/3.
@@ -35,7 +44,6 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
     private Camera myCamera;
     private Camera.Parameters myParameters;
     private Camera.AutoFocusCallback mAutoFocusCallback = null;
-    private boolean isView = false;
     private SurfaceHolder holder;
     // 摄像头的状态,0表示后置，1表示前置
     private int cameraPosition = 1;
@@ -43,6 +51,16 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
     private RecoderProgress mProgressBar;
     //保存录制视频的路径
     private static String mFilePath = "";
+    //相机支持的尺寸
+    private List<Camera.Size> mSupportedPreviewSizes;
+    /**
+     * 帧率
+     */
+    protected int mFrameRate = MIN_FRAME_RATE;
+    private boolean mStartPreview;
+    private boolean mPrepared;
+    private int mCameraId = 0;
+    private boolean mSurfaceCreated;
 
     public FragCameraPresenterImpl(IFragCameraContract.IFragCameraView mFragView) {
         this.mFragView = mFragView;
@@ -65,38 +83,157 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
             }
         };
         holder = mSurfaceView.getHolder();// 取得holder
+        setSurfaceHolder(holder);
+        prepare();
 
-        holder.addCallback(this); // holder加入回调接口
-        holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+    }
+    /**
+     * 设置预览输出SurfaceHolder
+     * @param sh
+     */
+    @SuppressWarnings("deprecation")
+    public void setSurfaceHolder(SurfaceHolder sh) {
+        if (sh != null) {
+            sh.addCallback(this);
+            if (!DeviceUtils.hasHoneycomb()) {
+                sh.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+            }
+        }
     }
 
     /**
-     * 相机的准备工作
+     * 开始预览
      */
-    //初始化Camera设置
-    public void initCamera(int position) {
-        if (myCamera == null && !isView) {
-            //默认打开后置摄像头
-            myCamera = Camera.open(position);
-            Log.i(TAG, "camera.open");
+    public void startPreview() {
+        try {
+            if (mStartPreview || mSurfaceHolder == null || !mPrepared) {
+                return;
+            } else {
+                mStartPreview = true;
+            }
+
+            if (mCameraId == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                myCamera = Camera.open();
+            } else {
+                myCamera = Camera.open(mCameraId);
+                Log.i(TAG, "camera.open");
+            }
+            //设置相机旋转90度
+            myCamera.setDisplayOrientation(90);
+            myCamera.setPreviewDisplay(mSurfaceHolder);
+
+            //设置摄像头参数
+            myParameters = myCamera.getParameters();
+            mSupportedPreviewSizes = myParameters.getSupportedPreviewSizes();//	获取支持的尺寸
+            prepareCameraParaments();
+            myCamera.setParameters(myParameters);
+            myCamera.startPreview();
+        } catch (Exception e) {
+            mFragView.showMsg("相机初始化错误,请检查是否有其他APP占用相机");
+            LogUtils.e("myTag", "相机初始化错误" + e.getLocalizedMessage());
         }
-        if (myCamera != null && !isView) {
+
+    }
+
+    /**
+     * 停止预览
+     */
+
+    public void stopPreview() {
+        if (myCamera != null) {
             try {
-                myParameters = myCamera.getParameters();
-                myParameters.setPreviewSize(1920, 1080);
-                myParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
-                myCamera.setParameters(myParameters);
-                //设置相机旋转90度
-                myCamera.setDisplayOrientation(90);
-                myCamera.setPreviewDisplay(mSurfaceHolder);
-                myCamera.startPreview();
-                isView = true;
+                myCamera.stopPreview();
+                myCamera.setPreviewCallback(null);
+                // camera.lock();
+                myCamera.release();
             } catch (Exception e) {
-                e.printStackTrace();
-                mFragView.showMsg("相机初始化错误");
-                LogUtils.e("myTag", "相机初始化错误" + e.getLocalizedMessage());
+                Log.e("myTag", "stopPreview...");
+            }
+            myCamera = null;
+        }
+        mStartPreview = false;
+    }
+
+    /**
+     * 预处理一些拍摄参数
+     * 注意：自动对焦参数cam_mode和cam-mode可能有些设备不支持，导致视频画面变形，需要判断一下，已知有"GT-N7100", "GT-I9308"会存在这个问题
+     */
+    @SuppressWarnings("deprecation")
+    protected void prepareCameraParaments() {
+        if (myParameters == null)
+            return;
+
+        List<Integer> rates = myParameters.getSupportedPreviewFrameRates();
+        if (rates != null) {
+            if (rates.contains(MAX_FRAME_RATE)) {
+                mFrameRate = MAX_FRAME_RATE;
+            } else {
+                Collections.sort(rates);
+                for (int i = rates.size() - 1; i >= 0; i--) {
+                    if (rates.get(i) <= MAX_FRAME_RATE) {
+                        mFrameRate = rates.get(i);
+                        break;
+                    }
+                }
             }
         }
+
+        myParameters.setPreviewFrameRate(mFrameRate);
+        // mParameters.setPreviewFpsRange(15 * 1000, 20 * 1000);
+        myParameters.setPreviewSize(640, 480);// 3:2
+
+        // 设置输出视频流尺寸，采样率
+        myParameters.setPreviewFormat(ImageFormat.NV21);
+
+        //设置自动连续对焦
+        String mode = getAutoFocusMode();
+        if (StringUtils.isNotEmpty(mode)) {
+            myParameters.setFocusMode(mode);
+        }
+
+        //设置人像模式，用来拍摄人物相片，如证件照。数码相机会把光圈调到最大，做出浅景深的效果。而有些相机还会使用能够表现更强肤色效果的色调、对比度或柔化效果进行拍摄，以突出人像主体。
+        //		if (mCameraId == Camera.CameraInfo.CAMERA_FACING_FRONT && isSupported(mParameters.getSupportedSceneModes(), Camera.Parameters.SCENE_MODE_PORTRAIT))
+        //			mParameters.setSceneMode(Camera.Parameters.SCENE_MODE_PORTRAIT);
+
+        if (isSupported(myParameters.getSupportedWhiteBalance(), "auto"))
+            myParameters.setWhiteBalance("auto");
+
+        //是否支持视频防抖
+        if ("true".equals(myParameters.get("video-stabilization-supported")))
+            myParameters.set("video-stabilization", "true");
+
+        //		mParameters.set("recording-hint", "false");
+        //
+        //		mParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+        if (!DeviceUtils.isDevice("GT-N7100", "GT-I9308", "GT-I9300")) {
+            myParameters.set("cam_mode", 1);
+            myParameters.set("cam-mode", 1);
+        }
+    }
+
+    /**
+     * 连续自动对焦
+     */
+    private String getAutoFocusMode() {
+        if (myParameters != null) {
+            //持续对焦是指当场景发生变化时，相机会主动去调节焦距来达到被拍摄的物体始终是清晰的状态。
+            List<String> focusModes = myParameters.getSupportedFocusModes();
+            if ((Build.MODEL.startsWith("GT-I950") || Build.MODEL.endsWith("SCH-I959") || Build.MODEL.endsWith("MEIZU MX3")) && isSupported(focusModes, "continuous-picture")) {
+                return "continuous-picture";
+            } else if (isSupported(focusModes, "continuous-video")) {
+                return "continuous-video";
+            } else if (isSupported(focusModes, "auto")) {
+                return "auto";
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 检测是否支持指定特性
+     */
+    private boolean isSupported(List<String> list, String key) {
+        return list != null && list.contains(key);
     }
 
     /**
@@ -130,6 +267,15 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
         }
 
         return null;
+    }
+
+    /**
+     * 开始预览
+     */
+    public void prepare() {
+        mPrepared = true;
+        if (mSurfaceCreated)
+            startPreview();
     }
 
     /**
@@ -213,9 +359,7 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
             if (cameraPosition == 1) {
                 // 现在是后置，变更为前置
                 if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                    /**
-                     * 记得释放camera，方便其他应用调用
-                     */
+
                     releaseCamera();
                     // 打开当前选中的摄像头
                     myCamera = Camera.open(i);
@@ -233,9 +377,6 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
             } else {
                 // 现在是前置， 变更为后置
                 if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
-                    /**
-                     * 记得释放camera，方便其他应用调用
-                     */
                     releaseCamera();
                     myCamera = Camera.open(i);
                     try {
@@ -258,16 +399,7 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
      */
     @Override
     public void releaseCamera() {
-        if (myCamera != null) {
-            myCamera.setPreviewCallback(null);
-            myCamera.stopPreview();// 停掉原来摄像头的预览
-            myCamera.release();
-            myCamera = null;
-        }
-        if (mRecorder != null) {
-            mRecorder.release();
-            mRecorder = null;
-        }
+        stopPreview();
     }
 
     @Override
@@ -299,24 +431,27 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        mSurfaceHolder = holder;
-        initCamera(0);
-
+        this.mSurfaceHolder = holder;
+        this.mSurfaceCreated = true;
+        if (mPrepared && !mStartPreview) {
+            startPreview();
+        }
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-        mSurfaceHolder = holder;
+        this.mSurfaceHolder = holder;
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
         // surfaceDestroyed的时候同时对象设置为null
-        mSurfaceView = null;
-        mSurfaceHolder = null;
-        if (mRecorder != null) {
-            mRecorder.release();
-            mRecorder = null;
+        this.mSurfaceHolder = null;
+        this.mSurfaceCreated = false;
+        this.mSurfaceView = null;
+        if (this.mRecorder != null) {
+            this.mRecorder.release();
+            this.mRecorder = null;
         }
     }
 }

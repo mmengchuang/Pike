@@ -91,6 +91,7 @@ public class VideoPlayPresenterImpl implements IVideoContract.IVideoPresenter {
                     }
                 });
             }
+
         });
     }
 
