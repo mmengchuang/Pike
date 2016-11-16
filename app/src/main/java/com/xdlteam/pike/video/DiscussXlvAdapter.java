@@ -85,7 +85,7 @@ public class DiscussXlvAdapter extends BaseAdapter {
             public void done(User user, BmobException e) {
                 if (e == null) {
                     if (user.getUserHeadPortrait().getUrl()==null){//头像为空,则显示默认头像
-                        Picasso.with(context).load(Contracts.DEFALT_HEAD_URL).into(finalViewHolder.circleImageViewHead);
+                        Picasso.with(context).load(Contracts.DEFAULT_HEADE_URI).into(finalViewHolder.circleImageViewHead);
                     }else {
                         //查询成功,设置头像
                         Picasso.with(context).load(user.getUserHeadPortrait().getUrl()).into(finalViewHolder.circleImageViewHead);

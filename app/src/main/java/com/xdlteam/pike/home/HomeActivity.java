@@ -24,6 +24,7 @@ import com.squareup.picasso.Picasso;
 import com.xdlteam.pike.R;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.camera.CameraActivity;
+import com.xdlteam.pike.config.Contracts;
 import com.xdlteam.pike.personage.PersonageActivity;
 
 import butterknife.BindArray;
@@ -85,7 +86,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 						View view = mNavigationView.getHeaderView(0);
 						CircleImageView userIcon = (CircleImageView) view.findViewById(R.id.nav_header_usericon);
 						TextView userName = (TextView) view.findViewById(R.id.nav_header_username);
-						Picasso.with(HomeActivity.this).load(mUser.getUserHeadPortrait().getFileUrl())
+
+						//获取头像的url
+						String url = "";
+						if (mUser.getUserHeadPortrait().getFileUrl()== null) {//如果不存在头像，则显示默认头像
+							url = Contracts.DEFAULT_HEADE_URI;
+						} else {
+							url = mUser.getUserHeadPortrait().getFileUrl();
+						}
+						Picasso.with(HomeActivity.this).load(url)
 								.resize(72, 72).centerCrop().into(userIcon);
 						userName.setText(mUser.getUserNick());
 						userIcon.setOnClickListener(HomeActivity.this);
