@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.dd.CircularProgressButton;
 import com.xdlteam.pike.R;
+import com.xdlteam.pike.application.MyApplcation;
 import com.xdlteam.pike.base.BaseActivity;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.home.HomeActivity;
@@ -80,12 +81,13 @@ public class LoginActivity extends BaseActivity implements Animator.AnimatorList
                 public void done(User user, BmobException e) {
                     if (e!=null){//登陆失败
                         exception = e;
-                        simulateErrorProgress(mBtnLogin);
                         loginFlag = false;
+                        simulateErrorProgress(mBtnLogin);
                         return;
                     } else {
-                        simulateSuccessProgress(mBtnLogin);
                         loginFlag = true;
+                        MyApplcation.sUser = user;
+                        simulateSuccessProgress(mBtnLogin);
                     }
                 }
             });
