@@ -48,6 +48,9 @@ public class User extends BmobUser {
     }
 
     public BmobFile getUserHeadPortrait() {
+        if(userHeadPortrait==null){
+            userHeadPortrait = new BmobFile();
+        }
         return userHeadPortrait;
     }
 

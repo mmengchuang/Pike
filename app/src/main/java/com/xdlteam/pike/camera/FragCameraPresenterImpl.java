@@ -29,7 +29,7 @@ import static com.yixia.weibo.sdk.MediaRecorderBase.MIN_FRAME_RATE;
  * Created by 11655 on 2016/11/3.
  */
 
-public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraPresenter, SurfaceHolder.Callback {
+public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraPresenter, SurfaceHolder.Callback, Camera.PreviewCallback {
 
     private IFragCameraContract.IFragCameraView mFragView;
     // 显示视频的控件
@@ -87,8 +87,10 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
         prepare();
 
     }
+
     /**
      * 设置预览输出SurfaceHolder
+     *
      * @param sh
      */
     @SuppressWarnings("deprecation")
@@ -127,6 +129,8 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
             mSupportedPreviewSizes = myParameters.getSupportedPreviewSizes();//	获取支持的尺寸
             prepareCameraParaments();
             myCamera.setParameters(myParameters);
+            //设置其他
+            setPreviewCallback();
             myCamera.startPreview();
         } catch (Exception e) {
             mFragView.showMsg("相机初始化错误,请检查是否有其他APP占用相机");
@@ -402,6 +406,13 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
         stopPreview();
     }
 
+    /**
+     * 设置回调
+     */
+    protected void setPreviewCallback() {
+        myCamera.setPreviewCallback(this);
+    }
+
     @Override
     public void openLight() {
         Camera.Parameters mParameters;
@@ -453,5 +464,51 @@ public class FragCameraPresenterImpl implements IFragCameraContract.IFragCameraP
             this.mRecorder.release();
             this.mRecorder = null;
         }
+    }
+
+    @Override
+    public void onPreviewFrame(byte[] bytes, Camera camera) {
+        //底层实时处理视频，将视频旋转好，并剪切成480x480
+        byte [] newBytes  = new byte[bytes.length];
+        YV12RotateNegative90(newBytes,bytes,camera.getParameters().getPreviewSize().width,camera.getParameters().getPreviewSize().height);
+        LogUtils.i("myTag","视频的数组"+newBytes.toString());
+    }
+    /**
+     * 旋转数据
+     *
+     * @param dst
+     *            目标数据
+     * @param src
+     *            源数据
+     * @param srcWidth
+     *            源数据宽
+     * @param srcHeight
+     *            源数据高
+     */
+    private void YV12RotateNegative90(byte[] dst, byte[] src, int srcWidth,
+                                      int srcHeight) {
+        int t = 0;
+        int i, j;
+
+        int wh = srcWidth * srcHeight;
+
+        for (i = srcWidth - 1; i >= 0; i--) {
+            for (j = srcHeight - 1; j >= 0; j--) {
+                dst[t++] = src[j * srcWidth + i];
+            }
+        }
+
+        for (i = srcWidth / 2 - 1; i >= 0; i--) {
+            for (j = srcHeight / 2 - 1; j >= 0; j--) {
+                dst[t++] = src[wh + j * srcWidth / 2 + i];
+            }
+        }
+
+        for (i = srcWidth / 2 - 1; i >= 0; i--) {
+            for (j = srcHeight / 2 - 1; j >= 0; j--) {
+                dst[t++] = src[wh * 5 / 4 + j * srcWidth / 2 + i];
+            }
+        }
+
     }
 }
