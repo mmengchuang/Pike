@@ -52,7 +52,7 @@ public class NotificationUtils {
             // 设置通知的特性: 通知被点击后，自动消失
             notification.flags = Notification.FLAG_AUTO_CANCEL;
             // 设置点击通知栏操作
-//            Intent in = new Intent(mContext, MainActivity.class);// 点击跳转到指定页面
+//            Intent in = new Intent(mContext, Camera2Activity.class);// 点击跳转到指定页面
             Intent in = new Intent();
             PendingIntent pIntent = PendingIntent.getActivity(mContext, 0, in,
                     0);
@@ -62,7 +62,7 @@ public class NotificationUtils {
                     mContext.getPackageName(),
                     R.layout.notification_contentview);
             // 设置暂停按钮的点击事件
-//            Intent pause = new Intent(mContext, MainActivity.class);// 设置跳转到对应界面
+//            Intent pause = new Intent(mContext, Camera2Activity.class);// 设置跳转到对应界面
             Intent pause = new Intent();
             PendingIntent pauseIn = PendingIntent.getActivity(mContext, 0, in,
                     0);
@@ -70,7 +70,7 @@ public class NotificationUtils {
             remoteViews.setOnClickPendingIntent(R.id.pause, pauseIn);
             /********** 简单分隔 **************************/
             // 设置取消按钮的点击事件
-//            Intent stop = new Intent(mContext, MainActivity.class);// 设置跳转到对应界面
+//            Intent stop = new Intent(mContext, Camera2Activity.class);// 设置跳转到对应界面
             Intent stop = new Intent();
             PendingIntent stopIn = PendingIntent
                     .getActivity(mContext, 0, in, 0);

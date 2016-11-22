@@ -65,4 +65,5 @@ public class MyApplcation extends Application {
     public static Context getContext() {
         return application;
     }
+
 }

@@ -6,7 +6,6 @@ import com.xdlteam.pike.application.MyApplcation;
 import com.xdlteam.pike.bean.Discuss;
 import com.xdlteam.pike.contract.IVideoContract;
 import com.xdlteam.pike.util.LogUtils;
-import com.yixia.camera.demo.log.Logger;
 
 import java.util.List;
 
@@ -84,7 +83,7 @@ public class VideoPlayPresenterImpl implements IVideoContract.IVideoPresenter {
                                 break;
                             case MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
                                 //显示 下载速度
-                                Logger.e("download rate:" + extra);
+                                LogUtils.e("myTag","download rate:" + extra);
                                 break;
                         }
                         return true;

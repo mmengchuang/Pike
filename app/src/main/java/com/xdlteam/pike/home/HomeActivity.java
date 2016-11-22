@@ -23,7 +23,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.xdlteam.pike.R;
 import com.xdlteam.pike.bean.User;
-import com.xdlteam.pike.camera.CameraActivity;
+import com.xdlteam.pike.camera.Camera2Activity;
 import com.xdlteam.pike.config.Contracts;
 import com.xdlteam.pike.personage.PersonageActivity;
 
@@ -171,7 +171,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 				mDrawerLayout.openDrawer(GravityCompat.START);
 				return true;
 			case R.id.Recording:
-				intent = new Intent(this, CameraActivity.class);
+				intent = new Intent(this, Camera2Activity.class);
 				startActivity(intent);
 				break;
 		}

@@ -74,5 +74,7 @@ public class IFragCameraContract {
          * @param fileUrl 文件路径
          */
         void delFile(String fileUrl);
+
+        String getmFilePath();
     }
 }

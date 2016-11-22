@@ -6,6 +6,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.2'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
     }
 }
 
@@ -14,6 +15,7 @@ allprojects {
         jcenter()
         //Bmob的maven仓库地址--必填
         maven { url "https://raw.github.com/bmob/bmob-android-sdk/master" }
+        maven { url "https://jitpack.io" }
     }
 }
 

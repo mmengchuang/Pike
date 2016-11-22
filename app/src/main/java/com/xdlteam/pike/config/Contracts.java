@@ -10,7 +10,10 @@ public interface Contracts {
     boolean DEBUG = true;
 
     //Bmob云APP_Key
-    String BMOB_APP_KEY = "e9bbb016bbc3450ec1449b45f366174a";
+
+//    String BMOB_APP_KEY = "e9bbb016bbc3450ec1449b45f366174a";
+    //我的Key
+        String BMOB_APP_KEY = "bdede6a9c29e3124ae6b8666d376c8b0";
 
     //微信分享key
     String WX_APP_ID = "";
