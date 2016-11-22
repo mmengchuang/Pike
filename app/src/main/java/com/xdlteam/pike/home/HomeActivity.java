@@ -34,6 +34,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Subscriber;
 import rx.subscriptions.CompositeSubscription;
 
+
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 	private HomePresenter mHomePresenter;
 	@BindView(R.id.activity_home_dl)
@@ -114,9 +115,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
 		//初始化viewpager的fragment
-		mFragments[0] = new OneFragment();
+		mFragments[0] = new FollowFragment();
 		mFragments[1] = new FindFragment();
-		mFragments[2] = new SanFragment();
+		mFragments[2] = new CityFragment();
 
 		mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
 			@Override
@@ -153,6 +154,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 	//NavigationItemSelected的选择事件
 	@Override
 	public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+		switch (item.getItemId()){
+			case R.id.drawer_view_chazhao://查找
+				break;
+			case R.id.drawer_view_seting://设置
+				break;
+			case R.id.drawer_view_wenjian://本地作品
+				startActivity(new Intent(this,LocalWorksActivity.class));
+				break;
+		}
 		return false;
 	}
 

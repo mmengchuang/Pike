@@ -21,8 +21,9 @@ public interface Contracts {
     //QQ登陆Key
     String QQ_APP_ID = "101361227";
 
-    /**
-     * 默认头像的地址
-     */
+    /* 默认头像地址 */
     String DEFAULT_HEADE_URI = "http://bmob-cdn-6590.b0.upaiyun.com/2016/10/16/22901ee0406f7af280b56a1b5d555f58.png";
+
+    /*默认视频录制位置*/
+    String DEFAULT_VIDEO_CACHE = "/sdcard/Movies";
 }

@@ -63,6 +63,7 @@
         <activity android:name=".login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -93,9 +94,9 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name=".videodetails.VideoDetailsActivity" />
         <!-- 相机2 -->
-        <activity android:name=".camera.Camera2Activity"
-            android:screenOrientation="portrait">
-        </activity>
+        <activity
+            android:name=".camera.Camera2Activity"
+            android:screenOrientation="portrait" />
         <!-- 百度定位服务 -->
         <service
             android:name="com.baidu.location.f"
@@ -108,6 +109,7 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="kp3VlI5eAdZ8VN2Fz84h9lmVi0WVeDTq" />
 
+        <activity android:name=".home.LocalWorksActivity" />
     </application>
 
 </manifest>
