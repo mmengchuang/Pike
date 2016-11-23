@@ -97,6 +97,8 @@
         <activity
             android:name=".camera.Camera2Activity"
             android:screenOrientation="portrait" />
+        <activity android:name=".home.LocalWorksActivity" />
+        <activity android:name=".home.SettingActivity"/>
         <!-- 百度定位服务 -->
         <service
             android:name="com.baidu.location.f"
@@ -108,8 +110,6 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="kp3VlI5eAdZ8VN2Fz84h9lmVi0WVeDTq" />
-
-        <activity android:name=".home.LocalWorksActivity" />
     </application>
 
 </manifest>

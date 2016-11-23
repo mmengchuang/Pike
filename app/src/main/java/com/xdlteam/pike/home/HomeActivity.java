@@ -158,6 +158,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 			case R.id.drawer_view_chazhao://查找
 				break;
 			case R.id.drawer_view_seting://设置
+				startActivity(new Intent(this,SettingActivity.class));
 				break;
 			case R.id.drawer_view_wenjian://本地作品
 				startActivity(new Intent(this,LocalWorksActivity.class));
