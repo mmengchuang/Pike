@@ -9,7 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.xdlteam.pike.R;
-import com.xdlteam.pike.util.VideoUtils;
 
 import java.util.List;
 
@@ -19,24 +18,24 @@ import java.util.List;
 
 public class GridViewAdapter extends BaseAdapter {
     //数据源
-    private List<String> fileNames;
+    private List<Bitmap> bitmaps;
     private LayoutInflater inflater;
     private Context context;
 
-    public GridViewAdapter(Context context, List<String> fileNames) {
-        this.fileNames = fileNames;
-        this.context = context;
+    public GridViewAdapter(LocalWorksActivity context, List<Bitmap> bitmaps) {
+        this.context = context ;
+        this.bitmaps = bitmaps;
         inflater = LayoutInflater.from(context);
     }
 
     @Override
     public int getCount() {
-        return fileNames.size();
+        return bitmaps.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return fileNames.get(i);
+        return bitmaps.get(i);
     }
 
     @Override
@@ -55,10 +54,8 @@ public class GridViewAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) view.getTag();
         }
-       //获取视频第一帧图片
-         Bitmap bitmap = VideoUtils.createVideoThumbnail(fileNames.get(i));
         //显示图片
-        viewHolder.imageView.setImageBitmap(bitmap);
+        viewHolder.imageView.setImageBitmap(bitmaps.get(i));
         return view;
     }
 

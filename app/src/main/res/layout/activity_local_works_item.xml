@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="150dp"
+    android:layout_height="150dp"
+    android:orientation="horizontal"
+    android:background="@drawable/selector_act_local_works_gv_item">
     <ImageView
         android:id="@+id/act_local_works_item_iv"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="150dp"
         android:src="@drawable/dialog_xingbie_nv"
-        android:background="@color/blue_dark"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="70dp" />
 </LinearLayout>

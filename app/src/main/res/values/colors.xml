@@ -26,4 +26,8 @@
 
     <color name="blue_dark">#ff039bfb</color>
     <color name="video_color">#ff039bfb</color>
+    <!--分割线的颜色-->
+    <color name="colorLine">#e8e8e8</color>
+    <!--背景颜色-->
+    <color name="colorBackground">#eeeeee</color>
 </resources>
