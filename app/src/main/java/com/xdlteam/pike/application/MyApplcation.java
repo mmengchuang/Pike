@@ -39,6 +39,7 @@ public class MyApplcation extends Application {
         //BmobUpdateAgent.initAppVersion();
         dataMaps = new HashMap<>();
         context = getApplicationContext();
+//        1101080879651
     }
 
     /**

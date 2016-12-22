@@ -36,174 +36,172 @@ import rx.subscriptions.CompositeSubscription;
 
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
-	private HomePresenter mHomePresenter;
-	@BindView(R.id.activity_home_dl)
-	DrawerLayout mDrawerLayout;
-	@BindView(R.id.activity_home_nv)
-	NavigationView mNavigationView;
-	@BindView(R.id.activity_home_tablayout)
-	TabLayout mTabLayout;
-	@BindView(R.id.activity_home_vp)
-	ViewPager mViewPager;
-	@BindView(R.id.activity_home_toolbar)
-	Toolbar mToolbar;
-	@BindArray(R.array.home_activity_tabstitle)
-	String[] mTabsTitles;
-	private ActionBarDrawerToggle drawerToggle;
-	private CompositeSubscription mSubscription;
-	private Fragment[] mFragments = new Fragment[3];
-	private User mUser;//当前用户
+    private HomePresenter mHomePresenter;
+    @BindView(R.id.activity_home_dl)
+    DrawerLayout mDrawerLayout;
+    @BindView(R.id.activity_home_nv)
+    NavigationView mNavigationView;
+    @BindView(R.id.activity_home_tablayout)
+    TabLayout mTabLayout;
+    @BindView(R.id.activity_home_vp)
+    ViewPager mViewPager;
+    @BindView(R.id.activity_home_toolbar)
+    Toolbar mToolbar;
+    @BindArray(R.array.home_activity_tabstitle)
+    String[] mTabsTitles;
+    private ActionBarDrawerToggle drawerToggle;
+    private CompositeSubscription mSubscription;
+    private Fragment[] mFragments = new Fragment[3];
+    private User mUser;//当前用户
 
-	public static Intent newIntent(Context context) {
-		Intent intent = new Intent(context, HomeActivity.class);
-		return intent;
-	}
+    public static Intent newIntent(Context context) {
+        Intent intent = new Intent(context, HomeActivity.class);
+        return intent;
+    }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_home);
-		ButterKnife.bind(this);
-		mSubscription = new CompositeSubscription();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home);
+        ButterKnife.bind(this);
+        mSubscription = new CompositeSubscription();
+        mToolbar.setTitle("");
+        setSupportActionBar(mToolbar);
 
-		mToolbar.setTitle("");
-		setSupportActionBar(mToolbar);
+        mHomePresenter = new HomePresenter(this);
 
-		mHomePresenter = new HomePresenter(this);
+        //navigationview
+        drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar
+                , R.string.drawer_open, R.string.drawer_close);
+        mDrawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+        mNavigationView.setNavigationItemSelectedListener(this);
 
-		//navigationview
-		drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar
-				, R.string.drawer_open, R.string.drawer_close);
-		mDrawerLayout.addDrawerListener(drawerToggle);
-		drawerToggle.syncState();
-		mNavigationView.setNavigationItemSelectedListener(this);
+        //取出抽屉里面的设置图片控件和,用户名
+        mSubscription.add(mHomePresenter
+                .getUser()
+                .subscribe(new Subscriber<User>() {
+                    @Override
+                    public void onCompleted() {
+                        View view = mNavigationView.getHeaderView(0);
+                        CircleImageView userIcon = (CircleImageView) view.findViewById(R.id.nav_header_usericon);
+                        TextView userName = (TextView) view.findViewById(R.id.nav_header_username);
+                        //获取头像的url
+                        String url = "";
+                        if (mUser.getUserHeadPortrait().getFileUrl() == null) {//如果不存在头像，则显示默认头像
+                            url = Contracts.DEFAULT_HEADE_URI;
+                        } else {
+                            url = mUser.getUserHeadPortrait().getFileUrl();
+                        }
+                        Picasso.with(HomeActivity.this).load(url)
+                                .resize(72, 72).centerCrop().into(userIcon);
+                        userName.setText(mUser.getUserNick());
+                        userIcon.setOnClickListener(HomeActivity.this);
+                    }
 
-		//取出抽屉里面的设置图片控件和,用户名
-		mSubscription.add(mHomePresenter
-				.getUser()
-				.subscribe(new Subscriber<User>() {
-					@Override
-					public void onCompleted() {
-						View view = mNavigationView.getHeaderView(0);
-						CircleImageView userIcon = (CircleImageView) view.findViewById(R.id.nav_header_usericon);
-						TextView userName = (TextView) view.findViewById(R.id.nav_header_username);
+                    @Override
+                    public void onError(Throwable throwable) {
+                        Snackbar.make(mToolbar, "用户未登陆", Snackbar.LENGTH_SHORT).show();
+                    }
 
-						//获取头像的url
-						String url = "";
-						if (mUser.getUserHeadPortrait().getFileUrl()== null) {//如果不存在头像，则显示默认头像
-							url = Contracts.DEFAULT_HEADE_URI;
-						} else {
-							url = mUser.getUserHeadPortrait().getFileUrl();
-						}
-						Picasso.with(HomeActivity.this).load(url)
-								.resize(72, 72).centerCrop().into(userIcon);
-						userName.setText(mUser.getUserNick());
-						userIcon.setOnClickListener(HomeActivity.this);
-					}
-
-					@Override
-					public void onError(Throwable throwable) {
-						Snackbar.make(mToolbar, "用户未登陆", Snackbar.LENGTH_SHORT).show();
-					}
-
-					@Override
-					public void onNext(User user) {
-						mUser = user;
-					}
-				})
-		);
+                    @Override
+                    public void onNext(User user) {
+                        mUser = user;
+                    }
+                })
+        );
 
 
-		//初始化viewpager的fragment
-		mFragments[0] = new FollowFragment();
-		mFragments[1] = new FindFragment();
-		mFragments[2] = new CityFragment();
+        //初始化viewpager的fragment
+        mFragments[0] = new FollowFragment();
+        mFragments[1] = new FindFragment();
+        mFragments[2] = new CityFragment();
 
-		mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
-			@Override
-			public Fragment getItem(int position) {
-				return mFragments[position];
-			}
+        mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+            @Override
+            public Fragment getItem(int position) {
+                return mFragments[position];
+            }
 
-			@Override
-			public int getCount() {
-				return mFragments.length;
-			}
+            @Override
+            public int getCount() {
+                return mFragments.length;
+            }
 
-			@Override
-			public CharSequence getPageTitle(int position) {
-				return mTabsTitles[position];
-			}
-		});
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return mTabsTitles[position];
+            }
+        });
 
-		mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.setupWithViewPager(mViewPager);
 
-		//设置初始为第二个
-		mViewPager.setCurrentItem(1);
-	}
+        //设置初始为第二个
+        mViewPager.setCurrentItem(1);
+    }
 
-	@Override
-	public void onBackPressed() {
-		if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-			mDrawerLayout.closeDrawer(GravityCompat.START);
-			return;
-		}
-		super.onBackPressed();
-	}
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+            return;
+        }
+        super.onBackPressed();
+    }
 
-	//NavigationItemSelected的选择事件
-	@Override
-	public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()){
-			case R.id.drawer_view_chazhao://查找
-				break;
-			case R.id.drawer_view_seting://设置
-				startActivity(new Intent(this,SettingActivity.class));
-				break;
-			case R.id.drawer_view_wenjian://本地作品
-				startActivity(new Intent(this,LocalWorksActivity.class));
-				break;
-		}
-		return false;
-	}
+    //NavigationItemSelected的选择事件
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.drawer_view_chazhao://查找
+                break;
+            case R.id.drawer_view_seting://设置
+                startActivity(new Intent(this, SettingActivity.class));
+                break;
+            case R.id.drawer_view_wenjian://本地作品
+                startActivity(new Intent(this, LocalWorksActivity.class));
+                break;
+        }
+        return false;
+    }
 
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.home_menu, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.home_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				mDrawerLayout.openDrawer(GravityCompat.START);
-				return true;
-			case R.id.Recording:
-				intent = new Intent(this, Camera2Activity.class);
-				startActivity(intent);
-				break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.Recording:
+                intent = new Intent(this, Camera2Activity.class);
+                startActivity(intent);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		if (mSubscription != null && !mSubscription.isUnsubscribed()) {
-			mSubscription.unsubscribe();
-		}
-	}
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+        }
+    }
 
-	@Override
-	public void onClick(View view) {
-		Intent intent = PersonageActivity.newIntent(this);
-		startActivity(intent);
-	}
+    @Override
+    public void onClick(View view) {
+        Intent intent = PersonageActivity.newIntent(this);
+        startActivity(intent);
+    }
 
-	public HomePresenter getPresenter() {
-		return mHomePresenter;
-	}
+    public HomePresenter getPresenter() {
+        return mHomePresenter;
+    }
 }

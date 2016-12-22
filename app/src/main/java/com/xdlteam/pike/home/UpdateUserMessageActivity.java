@@ -1,4 +1,4 @@
-package com.xdlteam.pike.updateUserMessage;
+package com.xdlteam.pike.home;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

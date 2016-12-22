@@ -1,1 +1,2 @@
 -keepattributes EnclosingMetho
+-keep class * extends android.app.Dialog

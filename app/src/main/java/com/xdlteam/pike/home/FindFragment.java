@@ -19,7 +19,7 @@ import com.xdlteam.pike.BR;
 import com.xdlteam.pike.R;
 import com.xdlteam.pike.bean.Video;
 import com.xdlteam.pike.util.RxBus;
-import com.xdlteam.pike.videodetails.VideoDetailsActivity;
+import com.xdlteam.pike.video.VideoDetailsActivity;
 import com.xdlteam.pike.viewmodel.VideoModel;
 
 import org.jetbrains.annotations.NotNull;

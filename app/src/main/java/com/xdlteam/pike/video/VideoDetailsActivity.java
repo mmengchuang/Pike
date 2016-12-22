@@ -1,4 +1,4 @@
-package com.xdlteam.pike.videodetails;
+package com.xdlteam.pike.video;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -30,7 +30,6 @@ import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.bean.Video;
 import com.xdlteam.pike.contract.IVideoContract;
 import com.xdlteam.pike.util.RxBus;
-import com.xdlteam.pike.video.VideoPlayPresenterImpl;
 
 import java.util.ArrayList;
 
