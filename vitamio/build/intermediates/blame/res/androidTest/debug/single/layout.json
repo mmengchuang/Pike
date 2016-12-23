@@ -2,5 +2,9 @@
     {
         "merged": "E:\\Workspaces\\ThirdProject\\Pike\\vitamio\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\mediacontroller.xml",
         "source": "E:\\Workspaces\\ThirdProject\\Pike\\vitamio\\build\\intermediates\\bundles\\debug\\res\\layout\\mediacontroller.xml"
+    },
+    {
+        "merged": "E:\\Workspaces\\MyProjects\\Pike\\vitamio\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\mediacontroller.xml",
+        "source": "E:\\Workspaces\\MyProjects\\Pike\\vitamio\\build\\intermediates\\bundles\\debug\\res\\layout\\mediacontroller.xml"
     }
 ]

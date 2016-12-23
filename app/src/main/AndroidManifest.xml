@@ -60,7 +60,6 @@
         <activity android:name=".camera.CameraActivity" />
         <activity android:name=".home.HomeActivity" />
         <activity android:name=".home.UpdateUserMessageActivity" />
-        <activity android:name=".location.LocationActivity" />
         <activity android:name=".release.ReleaseActivity" />
         <activity android:name=".personage.PersonageActivity" />
         <!--QQ 登陆的Activity-->

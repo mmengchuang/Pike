@@ -18,17 +18,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.github.nitrico.lastadapter.LastAdapter;
 import com.squareup.picasso.Picasso;
 import com.xdlteam.pike.R;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.bean.Video;
 import com.xdlteam.pike.home.UpdateUserMessageActivity;
-import com.xdlteam.pike.util.RxBus;
-import com.xdlteam.pike.video.VideoDetailsActivity;
 import com.xdlteam.pike.viewmodel.UserModel;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -44,7 +39,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class PersonageActivity extends AppCompatActivity implements LastAdapter.OnClickListener {
+public class PersonageActivity extends AppCompatActivity  {
 
     @BindView(R.id.act_personage_userimage)
     CircleImageView mActPersonageUserimage;
@@ -284,12 +279,12 @@ public class PersonageActivity extends AppCompatActivity implements LastAdapter.
         }
     }
 
-    @Override
-    public void onClick(@NotNull Object o, @NotNull View view, int i, int i1) {
-        Intent intent = new Intent(this, VideoDetailsActivity.class);
-        RxBus.getDefault().post((Video) o);
-        startActivity(intent);
-    }
+//    @Override
+//    public void onClick(@NotNull Object o, @NotNull View view, int i, int i1) {
+//        Intent intent = new Intent(this, VideoDetailsActivity.class);
+//        RxBus.getDefault().post((Video) o);
+//        startActivity(intent);
+//    }
 
     @OnClick(value = {R.id.activity_personage_zhuopin, R.id.activity_personage_xihuan})
     public void myOnClick(View view) {

@@ -1,6 +1,5 @@
 package com.xdlteam.pike.home;
 
-import android.content.Intent;
 import android.databinding.ObservableArrayList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,14 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.nitrico.lastadapter.LastAdapter;
-import com.xdlteam.pike.BR;
 import com.xdlteam.pike.R;
 import com.xdlteam.pike.bean.Video;
-import com.xdlteam.pike.util.RxBus;
-import com.xdlteam.pike.video.VideoDetailsActivity;
 import com.xdlteam.pike.viewmodel.VideoModel;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -36,7 +30,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by Yin on 2016/11/3.
  */
 
-public class FindFragment extends Fragment implements LastAdapter.OnClickListener {
+public class FindFragment extends Fragment  {
 	public static final String TAG = FindFragment.class.getSimpleName();
 	@BindView(R.id.fragment_find_recyclerview)
 	RecyclerView mFragmentFindRecyclerview;/*
@@ -76,9 +70,10 @@ public class FindFragment extends Fragment implements LastAdapter.OnClickListene
 		mFragmentFindRecyclerview.setVisibility(View.GONE);
 		setVideos();
 
-		LastAdapter.with(mVideos, BR.item)
+		LastAdapter.with(mVideos, 2)
 				.map(Video.class, R.layout.fragment_find_item)
-				.onClickListener(this)
+//				.onClickListener(this)
+
 				.into(mFragmentFindRecyclerview);
 
 		mFragmentFindRecyclerview.addOnScrollListener(
@@ -136,12 +131,12 @@ public class FindFragment extends Fragment implements LastAdapter.OnClickListene
 				}));
 	}
 
-	@Override
-	public void onClick(@NotNull Object o, @NotNull View view, int i, int i1) {
-		Intent intent = new Intent(getActivity(), VideoDetailsActivity.class);
-		RxBus.getDefault().post((Video) o);
-		startActivity(intent);
-	}
+//	@Override
+//	public void onClick(@NotNull Object o, @NotNull View view, int i, int i1) {
+//		Intent intent = new Intent(getActivity(), VideoDetailsActivity.class);
+//		RxBus.getDefault().post((Video) o);
+//		startActivity(intent);
+//	}
 
 	@Override
 	public void onDestroy() {

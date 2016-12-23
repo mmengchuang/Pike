@@ -1,6 +1,5 @@
 package com.xdlteam.pike.home;
 
-import android.content.Intent;
 import android.databinding.ObservableArrayList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,12 +14,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.github.nitrico.lastadapter.LastAdapter;
-import com.xdlteam.pike.BR;
 import com.xdlteam.pike.R;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.bean.Video;
-import com.xdlteam.pike.util.RxBus;
-import com.xdlteam.pike.video.VideoDetailsActivity;
 import com.xdlteam.pike.viewmodel.UserModel;
 
 import java.util.List;
@@ -35,7 +31,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by Yin on 2016/11/3.
  */
 
-public class FollowFragment extends Fragment implements LastAdapter.OnClickListener {
+public class FollowFragment extends Fragment  {
 	private static final String TAG = "FollowFragment";
 	@BindView(R.id.fragment_guanzhu_linearlayout)
 	LinearLayout mFragmentGuanzhuLinearlayout;
@@ -82,9 +78,9 @@ public class FollowFragment extends Fragment implements LastAdapter.OnClickListe
 			}
 		});
 
-		LastAdapter.with(mViedos, BR.item)
+		LastAdapter.with(mViedos,3)
 				.map(Video.class, R.layout.fragment_find_item)
-				.onClickListener(this)
+//				.onClickListener(this)
 				.into(mFragmentGuanzhuRv);
 	}
 
@@ -124,12 +120,12 @@ public class FollowFragment extends Fragment implements LastAdapter.OnClickListe
 		);
 	}
 
-	@Override
-	public void onClick(Object o, View view, int i, int i1) {
-		Intent intent=new Intent(getContext(), VideoDetailsActivity.class);
-		RxBus.getDefault().post((Video)o);
-		startActivity(intent);
-	}
+//	@Override
+//	public void onClick(Object o, View view, int i, int i1) {
+//		Intent intent=new Intent(getContext(), VideoDetailsActivity.class);
+//		RxBus.getDefault().post((Video)o);
+//		startActivity(intent);
+//	}
 
 	@Override
 	public void onDestroy() {

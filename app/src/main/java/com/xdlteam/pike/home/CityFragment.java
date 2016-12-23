@@ -1,6 +1,5 @@
 package com.xdlteam.pike.home;
 
-import android.content.Intent;
 import android.databinding.ObservableArrayList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,12 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.nitrico.lastadapter.LastAdapter;
-import com.xdlteam.pike.BR;
 import com.xdlteam.pike.R;
 import com.xdlteam.pike.bean.User;
 import com.xdlteam.pike.bean.Video;
-import com.xdlteam.pike.util.RxBus;
-import com.xdlteam.pike.video.VideoDetailsActivity;
 import com.xdlteam.pike.viewmodel.UserModel;
 
 import java.util.List;
@@ -34,7 +30,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by Yin on 2016/11/3.
  */
 
-public class CityFragment extends Fragment implements LastAdapter.OnClickListener {
+public class CityFragment extends Fragment  {
 	private static final String TAG = "CityFragment";
 	@BindView(R.id.fragment_san_rv)
 	RecyclerView mFragmentSanRv;
@@ -76,9 +72,9 @@ public class CityFragment extends Fragment implements LastAdapter.OnClickListene
 		});
 		mFragmentSanSrl.setRefreshing(true);
 		mFragmentSanRv.setLayoutManager(new GridLayoutManager(getContext(), 2));
-		LastAdapter.with(mVideos, BR.item)
+		LastAdapter.with(mVideos, 1)
 				.map(Video.class, R.layout.item_tongcheng)
-				.onClickListener(this)
+//				.onClickListener(this)
 				.into(mFragmentSanRv);
 
 		getVideos();
@@ -108,12 +104,12 @@ public class CityFragment extends Fragment implements LastAdapter.OnClickListene
 		);
 	}
 
-	@Override
-	public void onClick(Object o, View view, int i, int i1) {
-		Intent intent=new Intent(getContext(), VideoDetailsActivity.class);
-		RxBus.getDefault().post((Video)o);
-		startActivity(intent);
-	}
+//	@Override
+//	public void onClick(Object o, View view, int i, int i1) {
+//		Intent intent=new Intent(getContext(), VideoDetailsActivity.class);
+//		RxBus.getDefault().post((Video)o);
+//		startActivity(intent);
+//	}
 
 	@Override
 	public void onDestroy() {

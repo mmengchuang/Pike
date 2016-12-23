@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.xdlteam.pike.R;
 import com.xdlteam.pike.base.BaseActivity;
 import com.xdlteam.pike.contract.IReleaseContract;
-import com.xdlteam.pike.location.LocationActivity;
 import com.xdlteam.pike.service.UploadService;
 
 import butterknife.BindView;
